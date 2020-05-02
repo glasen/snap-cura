@@ -1,0 +1,267 @@
+name: cura
+version: '4.6.1'
+base: core18
+summary: Ultimaker Cura
+description: |
+  Trusted by millions of users, Ultimaker Cura is the world’s most popular 3D printing software.
+  Prepare prints with a few clicks, integrate with CAD software for an easier workflow, or dive into custom settings for in-depth control. 
+
+  https://ultimaker.com/software/ultimaker-cura
+
+architectures: 
+  - amd64
+
+# icon: snap/gui/icon.svg
+
+grade: stable
+confinement: strict
+
+
+plugs: # plugs for theming, font settings, cursor and to use gtk3 file chooser
+  gtk-3-themes:
+    interface: content
+    target: $SNAP/data-dir/themes
+    default-provider: gtk-common-themes:gtk-3-themes
+  icon-themes:
+    interface: content
+    target: $SNAP/data-dir/icons
+    default-provider: gtk-common-themes:icon-themes
+  sound-themes:
+    interface: content
+    target: $SNAP/data-dir/sounds
+    default-provider: gtk-common-themes:sounds-themes
+
+
+apps:
+  cura-engine:
+    adapter: full
+    command: usr/bin/CuraEngine
+    # plugs:
+    #   - desktop
+    #   - unity7
+    #   - wayland
+    #   - network
+    #   - network-bind
+    #   - home
+    #   - opengl
+    #   - hardware-observe
+    #   - network-manager-observe
+    #   - network-observe
+    #   - gsettings
+
+  cura:
+    adapter: full
+    command: usr/bin/cura
+    command-chain:
+      - bin/desktop-launch
+      - bin/gtk3-env-launch
+    environment:
+      DISABLE_WAYLAND: 1
+    plugs:
+      - desktop
+      - unity7
+      - wayland
+      - network
+      - home
+      - opengl
+      - hardware-observe
+
+
+build-packages:
+  - wget
+  - qtbase5-dev
+  - dpkg-dev
+  - cmake
+  - g++
+  - protobuf-compiler
+  - libprotobuf-dev
+  - libprotoc-dev
+  - libpython3-dev
+  - python3-sip
+  - python3-sip-dev
+  - git
+  - gettext
+  - debhelper
+  - dh-python
+  - python3-all-dev
+  - python3-numpy
+  - python3-scipy
+  - pylint
+  - python3-pytest
+  - python3-pyqt5
+
+
+
+parts:
+  launchers: # custom launcher to set QT_QPA_PLATFORMTHEME=gtk3 correctly
+    source: local/launchers
+    plugin: dump
+    organize:
+      '*': bin/
+    stage:
+      - -bin/README.*
+
+
+  patches:
+    plugin: dump
+    source: patches
+    prime: [-*]
+
+
+  qt5:
+    plugin: nil
+    prime: [-*]
+    override-build: |
+      echo "deb http://archive.neon.kde.org/user bionic main" | tee /etc/apt/sources.list.d/kde-neon.list
+      wget -O - https://archive.neon.kde.org/public.key | apt-key add - 
+      apt update
+      apt install --no-install-recommends -yy libc6 libstdc++6 qtbase5-dev libqt5websockets5-dev qtconnectivity5-dev qtdeclarative5-dev qtquickcontrols2-5-dev libssl-dev libqt5svg5 libqt5websockets5
+
+
+  desktop-qt5:    
+    make-parameters:
+    - FLAVOR=qt5
+    plugin: make
+    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
+    source-subdir: qt
+    after: [qt5]
+    stage-packages:
+      - libxkbcommon0
+      - ttf-ubuntu-font-family
+      - shared-mime-info
+      - libqt5gui5
+      - libgdk-pixbuf2.0-0
+      - libqt5svg5
+      - locales-all
+
+
+  libarcus:
+    plugin: cmake
+    configflags: [-DCMAKE_BUILD_TYPE=RELEASE, -DCMAKE_INSTALL_PREFIX=/usr/]
+    source-type: tar
+    source: https://github.com/Ultimaker/libArcus/archive/4.6.1.tar.gz
+    stage-packages:
+      - libprotobuf10
+      - libpython3.6
+      - libpolyclipping22
+
+  libsavitar:
+    plugin: cmake
+    configflags: [-DCMAKE_BUILD_TYPE=RELEASE, -DCMAKE_INSTALL_PREFIX=/usr/]
+    source-type: tar
+    source: https://github.com/Ultimaker/libSavitar/archive/4.6.1.tar.gz  
+    after: [libarcus]
+
+
+  cura-engine:
+    plugin: cmake
+    configflags: [-DCMAKE_BUILD_TYPE=RELEASE, -DCMAKE_INSTALL_PREFIX=/usr/]
+    source-type: tar
+    source: https://github.com/Ultimaker/CuraEngine/archive/4.6.1.tar.gz
+    stage-packages:
+      - libgomp1
+    after: [libsavitar]
+
+
+
+  fdm-materials:
+    plugin: cmake
+    configflags: [-DCMAKE_BUILD_TYPE=RELEASE, -DCMAKE_INSTALL_PREFIX=/usr/]
+    source-type: tar
+    source: https://github.com/Ultimaker/fdm_materials/archive/4.6.1.tar.gz
+    after: [cura-engine]
+
+
+  uranium:
+    plugin: cmake
+    configflags: 
+      - -DCMAKE_BUILD_TYPE=RELEASE
+      - -DCMAKE_INSTALL_PREFIX=/usr/
+      - -DGETTEXT_MSGINIT_EXECUTABLE=msginit
+      - -DGETTEXT_MSGCONV_EXECUTABLE=msgconv
+      - -DGETTEXT_MSGMERGE_EXECUTABLE=msgmerge
+      - -DCURA_BINARY_DATA_DIRECTORY=/usr/share/uranium
+      - -DUM_NO_INSTALL_PLUGINS=UpdateChecker
+    source-type: tar
+    source: https://github.com/Ultimaker/Uranium/archive/4.6.1.tar.gz
+
+    stage-packages:
+      - python3-numpy
+      - python3-scipy
+      - python3-pyqt5
+      - python3-serial
+      - python3-pyqt5.qtopengl
+      - python3-pyqt5.qtquick
+      - python3-pyqt5.qtsvg
+      - qml-module-qtqml-models2
+      - qml-module-qtquick-dialogs
+      - python3-stl
+
+
+    override-pull: |
+      snapcraftctl pull
+      patch -p1 < "${SNAPCRAFT_STAGE}/uranium-cmake-scripts.patch"
+
+    override-build: |
+      snapcraftctl build
+      cp -rv ${SNAPCRAFT_PART_SRC}/cmake ${SNAPCRAFT_PART_INSTALL}/usr/share/uranium
+      cp -rv ${SNAPCRAFT_PART_SRC}/scripts ${SNAPCRAFT_PART_INSTALL}/usr/share/uranium
+    
+    after: [fdm-materials, qt5, patches]
+
+
+  charon:
+    plugin: cmake
+    configflags: 
+      - -DCMAKE_BUILD_TYPE=RELEASE
+      - -DCMAKE_INSTALL_PREFIX=/usr/
+    source-type: tar
+    source: https://github.com/Ultimaker/libCharon/archive/4.6.1.tar.gz
+    after: [cura-engine]
+    stage-packages:
+      - python3-pip
+      - python3-distutils
+      - python3-setuptools
+      - python3-wheel
+      - python3-urllib3
+      - python3-certifi
+
+
+  trimesh:
+    plugin: python
+    python-version: python3
+    source-type: tar
+    source: https://github.com/mikedh/trimesh/archive/3.2.39.tar.gz
+    after: [charon]
+    
+
+  sentry-sdk:
+    plugin: python
+    python-version: python3
+    source-type: tar
+    source: https://github.com/getsentry/sentry-python/releases/download/0.13.5/sentry-sdk-0.13.5.tar.gz
+    after: [charon]
+  
+
+  cura:
+    plugin: cmake
+    configflags: [-DCMAKE_BUILD_TYPE=RELEASE, -DCMAKE_INSTALL_PREFIX=/usr/, -DURANIUM_DIR=/root/stage/usr/share/uranium]
+    source-type: tar
+    source: https://github.com/Ultimaker/Cura/archive/4.6.1.tar.gz
+
+    stage-packages:
+      - fonts-open-sans
+      - python3-colorlog
+      - python3-requests
+      - python3-zeroconf
+      - python3-shapely
+      - qml-module-qt-labs-folderlistmodel
+      - qml-module-qt-labs-settings
+      - qml-module-qtquick-controls
+      - qml-module-qtquick-controls2
+      - python3-cryptography
+
+    override-build: |
+      snapcraftctl build
+
+    after: [desktop-qt5, qt5, uranium, trimesh, sentry-sdk]
