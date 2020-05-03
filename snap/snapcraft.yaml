@@ -1,4 +1,4 @@
-name: cura
+name: cura-slicer
 version: '4.6.1'
 base: core18
 summary: Ultimaker Cura
