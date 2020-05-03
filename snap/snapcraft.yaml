@@ -38,9 +38,8 @@ apps:
     plugs:
       - network
       - network-bind
-      - home
-      - hardware-observe
       - netlink-connector
+      - home
     
   cura:
     adapter: full
@@ -52,12 +51,12 @@ apps:
       - desktop
       - unity7
       - wayland
+      - mount-observe
       - network
       - network-bind
+      - netlink-connector
       - home
       - opengl
-      - hardware-observe
-      - netlink-connector
     
 
 build-packages:
