@@ -124,6 +124,7 @@ parts:
       - libgdk-pixbuf2.0-0
       - libqt5svg5
       - locales-all
+    after: [qt5]
 
 
   libarcus:
@@ -136,12 +137,14 @@ parts:
       - libpython3.6
       - libpolyclipping22
 
+
   libsavitar:
     plugin: cmake
     configflags: [-DCMAKE_BUILD_TYPE=RELEASE, -DCMAKE_INSTALL_PREFIX=/usr/]
     source-type: tar
     source: https://github.com/Ultimaker/libSavitar/archive/4.6.1.tar.gz  
     after: [libarcus]
+
 
 
   cura-engine:
@@ -151,7 +154,7 @@ parts:
     source: https://github.com/Ultimaker/CuraEngine/archive/4.6.1.tar.gz
     stage-packages:
       - libgomp1
-    after: [libsavitar]
+    after: [libsavitar, libarcus]
 
 
 
@@ -198,7 +201,7 @@ parts:
       cp -rv ${SNAPCRAFT_PART_SRC}/cmake ${SNAPCRAFT_PART_INSTALL}/usr/share/uranium
       cp -rv ${SNAPCRAFT_PART_SRC}/scripts ${SNAPCRAFT_PART_INSTALL}/usr/share/uranium
     
-    after: [fdm-materials, qt5, patches]
+    after: [fdm-materials, qt5, patches, cura-engine]
 
 
   charon:
@@ -255,4 +258,4 @@ parts:
     override-build: |
       snapcraftctl build
 
-    after: [desktop-qt5, qt5, uranium, trimesh, sentry-sdk]
+    after: [desktop-qt5, qt5, uranium, trimesh, sentry-sdk, cura-engine]
