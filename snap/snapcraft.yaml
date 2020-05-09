@@ -194,12 +194,7 @@ parts:
 
     override-pull: |
       snapcraftctl pull
-      patch -p1 < "${SNAPCRAFT_STAGE}/uranium-cmake-scripts.patch"
-
-    override-build: |
-      snapcraftctl build
-      cp -rv ${SNAPCRAFT_PART_SRC}/cmake ${SNAPCRAFT_PART_INSTALL}/usr/share/uranium
-      cp -rv ${SNAPCRAFT_PART_SRC}/scripts ${SNAPCRAFT_PART_INSTALL}/usr/share/uranium
+      patch -p1 < "${SNAPCRAFT_STAGE}/uranium.patch"
     
     after: [fdm-materials, qt5, patches, cura-engine]
 
@@ -239,7 +234,13 @@ parts:
 
   cura:
     plugin: cmake
-    configflags: [-DCMAKE_BUILD_TYPE=RELEASE, -DCMAKE_INSTALL_PREFIX=/usr/, -DURANIUM_DIR=/root/stage/usr/share/uranium]
+    configflags: 
+      - -DCMAKE_BUILD_TYPE=RELEASE
+      - -DCMAKE_INSTALL_PREFIX=/usr/
+      - -DURANIUM_DIR=/root/stage/usr/share/uranium
+      - -DCURA_VERSION=4.6.1
+      - -DCURA_BUILDTYPE=SNAP
+      - -DCURA_DEBUGMODE=OFF]
     source-type: tar
     source: https://github.com/Ultimaker/Cura/archive/4.6.1.tar.gz
 
@@ -255,7 +256,8 @@ parts:
       - qml-module-qtquick-controls2
       - python3-cryptography
 
-    override-build: |
-      snapcraftctl build
+    override-pull: |
+      snapcraftctl pull
+      patch -p1 < "${SNAPCRAFT_STAGE}/cura.patch"
 
     after: [desktop-qt5, qt5, uranium, trimesh, sentry-sdk, cura-engine]
