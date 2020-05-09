@@ -172,7 +172,6 @@ parts:
       - -DCMAKE_BUILD_TYPE=RELEASE
       - -DCMAKE_INSTALL_PREFIX=/usr/
       - -DGETTEXT_MSGINIT_EXECUTABLE=msginit
-      - -DGETTEXT_MSGCONV_EXECUTABLE=msgconv
       - -DGETTEXT_MSGMERGE_EXECUTABLE=msgmerge
       - -DCURA_BINARY_DATA_DIRECTORY=/usr/share/uranium
       - -DUM_NO_INSTALL_PLUGINS=UpdateChecker
@@ -237,7 +236,7 @@ parts:
     configflags: 
       - -DCMAKE_BUILD_TYPE=RELEASE
       - -DCMAKE_INSTALL_PREFIX=/usr/
-      - -DURANIUM_DIR=/root/stage/usr/share/uranium
+      - -DURANIUM_DIR=${SNAPCRAFT_STAGE}/usr/share/uranium
       - -DCURA_VERSION=4.6.1
       - -DCURA_BUILDTYPE=SNAP
       - -DCURA_DEBUGMODE=OFF]
