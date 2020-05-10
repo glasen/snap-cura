@@ -269,6 +269,7 @@ parts:
       - qml-module-qt-labs-settings
       - qml-module-qtquick-controls
       - qml-module-qtquick-controls2
+      - qtwayland5
     override-pull: |
       snapcraftctl pull
       patch -p1 < "${SNAPCRAFT_STAGE}/cura.patch"
