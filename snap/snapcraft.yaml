@@ -8,6 +8,12 @@ description: |
 
   https://ultimaker.com/software/ultimaker-cura
 
+  **Disclaimer:**
+
+  This is not an official version of Cura! It is build from the release sources but depends an other runtime libraries (Ubuntu Core 18, etc.) than the official version.
+  All product and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them. 
+
+
 architectures: 
   - amd64
 
@@ -16,7 +22,9 @@ confinement: strict
 
 icon: snap/gui/cura-icon.png
 
-plugs: # plugs for theming, font settings, cursor and to use gtk3 file chooser
+
+plugs:
+  gsettings:
   gtk-3-themes:
     interface: content
     target: $SNAP/data-dir/themes
@@ -47,6 +55,8 @@ apps:
     command-chain:
       - bin/desktop-launch
       - bin/gtk3-env-launch
+    environment:
+      QT_QPA_PLATFORMTHEME: gtk3
     plugs:
       - desktop
       - unity7
@@ -54,9 +64,11 @@ apps:
       - mount-observe
       - network
       - network-bind
+      - network-manager-observe
       - netlink-connector
       - home
       - opengl
+      - removable-media
     
 
 build-packages:
@@ -76,11 +88,8 @@ build-packages:
   - debhelper
   - dh-python
   - python3-all-dev
-  - python3-numpy
-  - python3-scipy
   - pylint
   - python3-pytest
-  - python3-pyqt5
 
 
 parts:
@@ -109,21 +118,30 @@ parts:
       apt install --no-install-recommends -yy libc6 libstdc++6 qtbase5-dev libqt5websockets5-dev qtconnectivity5-dev qtdeclarative5-dev qtquickcontrols2-5-dev libssl-dev libqt5svg5 libqt5websockets5
 
 
-  desktop-qt5:    
-    make-parameters:
-    - FLAVOR=qt5
-    plugin: make
+  desktop-qt5:
     source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
     source-subdir: qt
-    after: [qt5]
+    plugin: make
+    make-parameters: ["FLAVOR=qt5"]
+    build-packages:
+      - build-essential
+      - qtbase5-dev
+      - dpkg-dev
     stage-packages:
       - libxkbcommon0
       - ttf-ubuntu-font-family
+      - dmz-cursor-theme
+      - light-themes
+      - adwaita-icon-theme
+      - gnome-themes-standard
       - shared-mime-info
       - libqt5gui5
       - libgdk-pixbuf2.0-0
       - libqt5svg5
       - locales-all
+      - xdg-user-dirs
+      - fcitx-frontend-qt5
+      - qt5-gtk-platformtheme
     after: [qt5]
 
 
@@ -146,7 +164,6 @@ parts:
     after: [libarcus]
 
 
-
   cura-engine:
     plugin: cmake
     configflags: [-DCMAKE_BUILD_TYPE=RELEASE, -DCMAKE_INSTALL_PREFIX=/usr/]
@@ -155,7 +172,6 @@ parts:
     stage-packages:
       - libgomp1
     after: [libsavitar, libarcus]
-
 
 
   fdm-materials:
@@ -177,7 +193,6 @@ parts:
       - -DUM_NO_INSTALL_PLUGINS=UpdateChecker
     source-type: tar
     source: https://github.com/Ultimaker/Uranium/archive/4.6.1.tar.gz
-
     stage-packages:
       - python3-numpy
       - python3-scipy
@@ -189,12 +204,9 @@ parts:
       - qml-module-qtqml-models2
       - qml-module-qtquick-dialogs
       - python3-stl
-
-
     override-pull: |
       snapcraftctl pull
       patch -p1 < "${SNAPCRAFT_STAGE}/uranium.patch"
-    
     after: [fdm-materials, qt5, patches, cura-engine]
 
 
@@ -245,18 +257,19 @@ parts:
 
     stage-packages:
       - fonts-open-sans
+      - python3-cryptography
       - python3-colorlog
       - python3-requests
-      - python3-zeroconf
       - python3-shapely
+      - python3-zeroconf
+      - python3-pyqt5.qtopengl
+      - python3-pyqt5.qtquick
+      - python3-pyqt5.qtsvg
       - qml-module-qt-labs-folderlistmodel
       - qml-module-qt-labs-settings
       - qml-module-qtquick-controls
       - qml-module-qtquick-controls2
-      - python3-cryptography
-
     override-pull: |
       snapcraftctl pull
       patch -p1 < "${SNAPCRAFT_STAGE}/cura.patch"
-
     after: [desktop-qt5, qt5, uranium, trimesh, sentry-sdk, cura-engine]
