@@ -1,3 +1,18 @@
+diff -upNr Cura-4.6.1.orig/cura/CuraVersion.py.in Cura-4.6.1.patched/cura/CuraVersion.py.in
+--- Cura-4.6.1.orig/cura/CuraVersion.py.in	2020-04-29 10:58:11.000000000 +0200
++++ Cura-4.6.1.patched/cura/CuraVersion.py.in	2020-05-18 12:52:42.803749952 +0200
+@@ -5,8 +5,8 @@ CuraAppName = "@CURA_APP_NAME@"
+ CuraAppDisplayName = "@CURA_APP_DISPLAY_NAME@"
+ CuraVersion = "@CURA_VERSION@"
+ CuraBuildType = "@CURA_BUILDTYPE@"
+-CuraDebugMode = True if "@_cura_debugmode@" == "ON" else False
++CuraDebugMode = False # Always disable debug mode
+ CuraCloudAPIRoot = "@CURA_CLOUD_API_ROOT@"
+ CuraCloudAPIVersion = "@CURA_CLOUD_API_VERSION@"
+ CuraCloudAccountAPIRoot = "@CURA_CLOUD_ACCOUNT_API_ROOT@"
+-CuraMarketplaceRoot = "@CURA_MARKETPLACE_ROOT@"
+\ Kein Zeilenumbruch am Dateiende.
++CuraMarketplaceRoot = "@CURA_MARKETPLACE_ROOT@"
 diff -upNr Cura-4.6.1.orig/cura/UI/ObjectsModel.py Cura-4.6.1.patched/cura/UI/ObjectsModel.py
 --- Cura-4.6.1.orig/cura/UI/ObjectsModel.py	2020-04-29 10:58:11.000000000 +0200
 +++ Cura-4.6.1.patched/cura/UI/ObjectsModel.py	2020-05-09 15:05:38.432120149 +0200
@@ -22,9 +37,21 @@ diff -upNr Cura-4.6.1.orig/plugins/PostProcessingPlugin/Script.py Cura-4.6.1.pat
          if m is None:
              return default
          try:
+diff -upNr Cura-4.6.1.orig/plugins/PostProcessingPlugin/scripts/ChangeAtZ.py Cura-4.6.1.patched/plugins/PostProcessingPlugin/scripts/ChangeAtZ.py
+--- Cura-4.6.1.orig/plugins/PostProcessingPlugin/scripts/ChangeAtZ.py	2020-04-29 10:58:11.000000000 +0200
++++ Cura-4.6.1.patched/plugins/PostProcessingPlugin/scripts/ChangeAtZ.py	2020-05-18 12:34:13.309237102 +0200
+@@ -294,7 +294,7 @@ class ChangeAtZ(Script):
+             m = re.search("^[+-]?[0-9]*", subPart)
+         else:
+             #the minus at the beginning allows for negative values, e.g. for delta printers
+-            m = re.search("^[-]?[0-9]*\.?[0-9]*", subPart)
++            m = re.search(r"^[-]?[0-9]*\.?[0-9]*", subPart)
+         if m == None:
+             return default
+         try:
 diff -upNr Cura-4.6.1.orig/plugins/USBPrinting/USBPrinterOutputDevice.py Cura-4.6.1.patched/plugins/USBPrinting/USBPrinterOutputDevice.py
 --- Cura-4.6.1.orig/plugins/USBPrinting/USBPrinterOutputDevice.py	2020-04-29 10:58:11.000000000 +0200
-+++ Cura-4.6.1.patched/plugins/USBPrinting/USBPrinterOutputDevice.py	2020-05-09 15:08:20.252425205 +0200
++++ Cura-4.6.1.patched/plugins/USBPrinting/USBPrinterOutputDevice.py	2020-05-18 12:33:27.901234380 +0200
 @@ -260,8 +260,8 @@ class USBPrinterOutputDevice(PrinterOutp
                      self.sendCommand("M105")
                      self._last_temperature_request = time()
@@ -36,3 +63,12 @@ diff -upNr Cura-4.6.1.orig/plugins/USBPrinting/USBPrinterOutputDevice.py Cura-4.
                  # Update all temperature values
                  matched_extruder_nrs = []
                  for match in extruder_temperature_matches:
+@@ -283,7 +283,7 @@ class USBPrinterOutputDevice(PrinterOutp
+                     if match[2]:
+                         extruder.updateTargetHotendTemperature(float(match[2]))
+ 
+-                bed_temperature_matches = re.findall(b"B: ?(\d+\.?\d*)\s*\/?(\d+\.?\d*)?", line)
++                bed_temperature_matches = re.findall(r"B: ?(\d+\.?\d*)\s*\/?(\d+\.?\d*)?", line)
+                 if bed_temperature_matches:
+                     match = bed_temperature_matches[0]
+                     if match[0]:

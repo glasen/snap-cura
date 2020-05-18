@@ -128,6 +128,7 @@ parts:
       - qtbase5-dev
       - dpkg-dev
     stage-packages:
+      - libgtk2.0-0
       - libxkbcommon0
       - ttf-ubuntu-font-family
       - dmz-cursor-theme
@@ -203,7 +204,6 @@ parts:
       - python3-pyqt5.qtsvg
       - qml-module-qtqml-models2
       - qml-module-qtquick-dialogs
-      - python3-stl
     override-pull: |
       snapcraftctl pull
       patch -p1 < "${SNAPCRAFT_STAGE}/uranium.patch"
@@ -251,7 +251,6 @@ parts:
       - -DURANIUM_DIR=${SNAPCRAFT_STAGE}/usr/share/uranium
       - -DCURA_VERSION=4.6.1
       - -DCURA_BUILDTYPE=SNAP
-      - -DCURA_DEBUGMODE=OFF]
     source-type: tar
     source: https://github.com/Ultimaker/Cura/archive/4.6.1.tar.gz
 
