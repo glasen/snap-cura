@@ -1,0 +1,17 @@
+Author: Gregor Riepl <onitake@gmail.com>
+Description: Remove RPATH from build flags.
+  It's not needed on Linux and may cause maintenance problems.
+  See: https://wiki.debian.org/RpathIssue
+Index: libSavitar/CMakeLists.txt
+===================================================================
+--- libSavitar.orig/CMakeLists.txt	2019-09-11 01:28:32.535370740 +0200
++++ libSavitar/CMakeLists.txt	2019-09-11 01:28:32.531370499 +0200
+@@ -68,8 +68,6 @@
+ set(SAVITAR_VERSION 0.1.1)
+ set(SAVITAR_SOVERSION 0)
+ 
+-set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_FULL_LIBDIR})
+-
+ if(BUILD_STATIC)
+     add_library(Savitar STATIC ${savitar_SRCS})
+ else()

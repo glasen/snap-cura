@@ -1,0 +1,19 @@
+Author: Gregor Riepl <onitake@gmail.com>
+Description: Install to correct site-packages dir, based on Python version.
+  The Debian hack in CMakeLists was removed upstream, but python3 doesn't
+  report a Python-specific site-packages folder.
+  This is required, because SIP packages need to be compiled and installed
+  for every Python version separately.
+Index: libArcus/CMakeLists.txt
+===================================================================
+--- libArcus.orig/CMakeLists.txt	2019-09-09 20:48:29.000000000 +0200
++++ libArcus/CMakeLists.txt	2019-09-09 20:51:16.525946103 +0200
+@@ -40,6 +40,8 @@
+         set(LIB_SUFFIX "")
+     endif()
+ 
++    set(Python3_SITEARCH lib${LIB_SUFFIX}/python${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}/site-packages CACHE STRING "Directory to install Python bindings to")
++
+     include_directories(python/ src/ ${SIP_INCLUDE_DIRS} ${Python3_INCLUDE_DIRS})
+ endif()
+ 

@@ -1,0 +1,100 @@
+diff -upNr Uranium-4.6.2.orig/CMakeLists.txt Uranium-4.6.2.patched/CMakeLists.txt
+--- Uranium-4.6.2.orig/CMakeLists.txt	2020-05-26 16:31:37.000000000 +0200
++++ Uranium-4.6.2.patched/CMakeLists.txt	2020-07-15 21:31:14.092713019 +0200
+@@ -50,8 +50,9 @@ if(EXISTS /etc/debian_version)
+ else()
+     install(DIRECTORY UM DESTINATION lib${LIB_SUFFIX}/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages)
+ endif()
+-install(FILES ${CMAKE_SOURCE_DIR}/cmake/UraniumTranslationTools.cmake
+-        DESTINATION ${CMAKE_INSTALL_DATADIR}/cmake-${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}/Modules/ )
++
++install(DIRECTORY cmake DESTINATION ${CMAKE_INSTALL_DATADIR}/uranium)
++install(DIRECTORY scripts DESTINATION ${CMAKE_INSTALL_DATADIR}/uranium)
+ install(DIRECTORY resources DESTINATION ${CMAKE_INSTALL_DATADIR}/uranium)
+ 
+ # Detect plugins to install
+diff -upNr Uranium-4.6.2.orig/plugins/ConsoleLogger/ConsoleLogger.py Uranium-4.6.2.patched/plugins/ConsoleLogger/ConsoleLogger.py
+--- Uranium-4.6.2.orig/plugins/ConsoleLogger/ConsoleLogger.py	2020-05-26 16:31:37.000000000 +0200
++++ Uranium-4.6.2.patched/plugins/ConsoleLogger/ConsoleLogger.py	2020-07-15 21:31:14.092713019 +0200
+@@ -25,7 +25,7 @@ class ConsoleLogger(LogOutput):
+     def __init__(self) -> None:
+         super().__init__()
+         self._logger = logging.getLogger(self._name) # Create python logger
+-        self._logger.setLevel(logging.DEBUG)
++        self._logger.setLevel(logging.ERROR)
+         stream_handler = logging.StreamHandler() # Log to stream
+         stream_handler.setFormatter(logging_formatter)
+         self._logger.addHandler(stream_handler)
+diff -upNr Uranium-4.6.2.orig/UM/Settings/InstanceContainer.py Uranium-4.6.2.patched/UM/Settings/InstanceContainer.py
+--- Uranium-4.6.2.orig/UM/Settings/InstanceContainer.py	2020-05-26 16:31:37.000000000 +0200
++++ Uranium-4.6.2.patched/UM/Settings/InstanceContainer.py	2020-07-15 22:08:15.117023750 +0200
+@@ -545,7 +545,7 @@ class InstanceContainer(QObject, Contain
+                 common_path = os.path.commonpath([install_prefix, file_name])
+             except ValueError:
+                 common_path = ""
+-            if common_path is "" or not common_path.startswith(install_prefix):
++            if common_path == "" or not common_path.startswith(install_prefix):
+                 if trust_instance.signatureFileExistsFor(file_name):
+                     _containerRegistry.setExplicitReadOnly(self.getId())  # TODO???: self._read_only = True
+                     if not trust_instance.signedFileCheck(file_name):
+diff -upNr Uranium-4.6.2.orig/UM/VersionUpgradeManager.py Uranium-4.6.2.patched/UM/VersionUpgradeManager.py
+--- Uranium-4.6.2.orig/UM/VersionUpgradeManager.py	2020-05-26 16:31:37.000000000 +0200
++++ Uranium-4.6.2.patched/UM/VersionUpgradeManager.py	2020-07-15 21:31:14.092713019 +0200
+@@ -92,21 +92,21 @@ class VersionUpgradeManager:
+ 
+         #Regular expressions of the files that should not be checked, such as log files.
+         self._ignored_files = [
+-            ".*\.lock",       # Don't upgrade the configuration file lock. It's not persistent.
+-            "plugins\.json",  # plugins.json and packages.json need to remain the same for the version upgrade plug-ins.
+-            "packages\.json",
+-            ".*\.log",        # Don't process the log. It's not needed and it could be really big.
+-            ".*\.log.?",      # Don't process the backup of the log. It's not needed and it could be really big.
+-            "3.[0-3]\\.*",    # Don't upgrade folders that are back-ups from older version upgrades. Until v3.3 we stored the back-up in the config folder itself.
+-            "3.[0-3]/.*",
+-            "2.[0-7]\\.*",
+-            "2.[0-7]/.*",
+-            "cura\\.*",
+-            "cura/.*",
+-            "plugins\\.*",    # Don't upgrade manually installed plug-ins.
+-            "plugins/.*",
+-            "./*packages\.json",
+-            "./*plugins\.json"
++            r".*\.lock",       # Don't upgrade the configuration file lock. It's not persistent.
++            r"plugins\.json",  # plugins.json and packages.json need to remain the same for the version upgrade plug-ins.
++            r"packages\.json",
++            r".*\.log",        # Don't process the log. It's not needed and it could be really big.
++            r".*\.log.?",      # Don't process the backup of the log. It's not needed and it could be really big.
++            r"3.[0-3]\\.*",    # Don't upgrade folders that are back-ups from older version upgrades. Until v3.3 we stored the back-up in the config folder itself.
++            r"3.[0-3]/.*",
++            r"2.[0-7]\\.*",
++            r"2.[0-7]/.*",
++            r"cura\\.*",
++            r"cura/.*",
++            r"plugins\\.*",    # Don't upgrade manually installed plug-ins.
++            r"plugins/.*",
++            r"./*packages\.json",
++            r"./*plugins\.json"
+         ]  # type: List[str]
+ 
+     def registerIgnoredFile(self, file_name: str) -> None:
+diff -upNr Uranium-4.6.2.orig/UM/View/GL/ShaderProgram.py Uranium-4.6.2.patched/UM/View/GL/ShaderProgram.py
+--- Uranium-4.6.2.orig/UM/View/GL/ShaderProgram.py	2020-05-26 16:31:37.000000000 +0200
++++ Uranium-4.6.2.patched/UM/View/GL/ShaderProgram.py	2020-07-15 21:47:26.190101369 +0200
+@@ -337,13 +337,13 @@ class ShaderProgram:
+         elif type(value) is Color:
+             self._shader_program.setUniformValue(uniform,
+                 QColor(value.r * 255, value.g * 255, value.b * 255, value.a * 255))
+-        elif type(value) is list and len(value) is 2:
++        elif type(value) == list and len(value) == 2:
+             self._shader_program.setUniformValue(uniform, QVector2D(value[0], value[1]))
+-        elif type(value) is list and len(value) is 3:
++        elif type(value) == list and len(value) == 3:
+             self._shader_program.setUniformValue(uniform, QVector3D(value[0], value[1], value[2]))
+-        elif type(value) is list and len(value) is 4:
++        elif type(value) == list and len(value) == 4:
+             self._shader_program.setUniformValue(uniform, QVector4D(value[0], value[1], value[2], value[3]))
+-        elif type(value) is list and type(value[0]) is list and len(value[0]) is 2:
++        elif type(value) == list and type(value[0]) == list and len(value[0]) == 2:
+             self._shader_program.setUniformValueArray(uniform, [QVector2D(i[0], i[1]) for i in value])
+         else:
+             self._shader_program.setUniformValue(uniform, value)

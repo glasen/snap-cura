@@ -1,0 +1,17 @@
+Author: Gregor Riepl <onitake@gmail.com>
+Description: Remove RPATH from build flags.
+  It's not needed on Linux and may cause maintenance problems.
+  See: https://wiki.debian.org/RpathIssue
+Index: libArcus/CMakeLists.txt
+===================================================================
+--- libArcus.orig/CMakeLists.txt	2019-09-09 20:32:51.028224672 +0200
++++ libArcus/CMakeLists.txt	2019-09-09 20:32:54.800189719 +0200
+@@ -69,8 +69,6 @@
+ set(ARCUS_VERSION 1.1.0)
+ set(ARCUS_SOVERSION 3)
+ 
+-set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_FULL_LIBDIR}")
+-
+ if(BUILD_STATIC)
+     add_library(Arcus STATIC ${arcus_SRCS})
+     if(NOT WIN32 OR CMAKE_COMPILER_IS_GNUCXX)

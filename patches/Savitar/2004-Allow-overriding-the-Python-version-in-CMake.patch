@@ -1,0 +1,35 @@
+From: Nicolas Dandrimont <olasd@debian.org>
+Date: Mon, 20 Jan 2020 12:37:08 +0100
+Subject: Allow overriding the Python version in CMake
+
+---
+ CMakeLists.txt      | 2 +-
+ cmake/FindSIP.cmake | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b97ee18..92cae18 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -32,7 +32,7 @@ if(BUILD_PYTHON)
+         find_package(PythonLibs 3.4 REQUIRED)
+     else()
+         # Use FindPython3 for CMake >=3.12
+-        find_package(Python3 3.4 REQUIRED COMPONENTS Interpreter Development)
++        find_package(Python3 ${PYVER} EXACT REQUIRED COMPONENTS Interpreter Development)
+     endif()
+ 
+     find_package(SIP REQUIRED)
+diff --git a/cmake/FindSIP.cmake b/cmake/FindSIP.cmake
+index 815a16d..90b5398 100644
+--- a/cmake/FindSIP.cmake
++++ b/cmake/FindSIP.cmake
+@@ -63,7 +63,7 @@ if(${CMAKE_VERSION} VERSION_LESS 3.12)
+     endif()
+ else()
+     # Use FindPython3 for CMake >=3.12
+-    find_package(Python3 3.4 REQUIRED COMPONENTS Interpreter Development)
++    find_package(Python3 ${PYVER} EXACT REQUIRED COMPONENTS Interpreter Development)
+ endif()
+ 
+ get_filename_component(_python_binary_path ${Python3_EXECUTABLE} DIRECTORY)

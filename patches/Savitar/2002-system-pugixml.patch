@@ -1,0 +1,71 @@
+Author: Gregor Riepl <onitake@gmail.com>
+Description: Depend on system pugixml.
+  Upstream bundled their own version of pugixml.
+  On Debian, we have a maintained packages of this library,
+  so use that instead.
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -15,7 +15,9 @@ if(BUILD_TESTS)
+     find_package(Threads QUIET)
+ endif()
+ 
+-add_subdirectory(pugixml)
++find_path(PUGIXML_INCLUDE_DIR "pugixml.hpp" REQUIRED)
++find_library(PUGIXML_LIBRARY pugixml REQUIRED)
++include_directories(${PUGIXML_INCLUDE_DIR} SYSTEM)
+ 
+ if(BUILD_PYTHON)
+     list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+@@ -76,7 +78,7 @@ else()
+     add_library(Savitar SHARED ${savitar_SRCS})
+ endif()
+ 
+-set(Savitar_LINK_LIBRARIES pugixml)
++set(Savitar_LINK_LIBRARIES ${PUGIXML_LIBRARY})
+ if(CMAKE_USE_PTHREADS_INIT)
+     list(APPEND Savitar_LINK_LIBRARIES pthread)
+ endif()
+--- a/src/MeshData.cpp
++++ b/src/MeshData.cpp
+@@ -17,7 +17,7 @@
+  */
+ 
+ #include "MeshData.h"
+-#include "../pugixml/src/pugixml.hpp"
++#include <pugixml.hpp>
+ #include <cstring>
+ #include <iostream>
+ #include <stdexcept> //For std::runtime_error.
+--- a/src/Scene.cpp
++++ b/src/Scene.cpp
+@@ -17,7 +17,7 @@
+  */
+ 
+ #include "Scene.h"
+-#include "../pugixml/src/pugixml.hpp"
++#include <pugixml.hpp>
+ #include <iostream>
+ #include <string>
+ using namespace Savitar;
+--- a/src/SceneNode.cpp
++++ b/src/SceneNode.cpp
+@@ -18,7 +18,7 @@
+ 
+ #include "SceneNode.h"
+ #include "Namespace.h"
+-#include "../pugixml/src/pugixml.hpp"
++#include <pugixml.hpp>
+ #include <iostream>
+ using namespace Savitar;
+ 
+--- a/src/ThreeMFParser.h
++++ b/src/ThreeMFParser.h
+@@ -21,7 +21,7 @@
+ 
+ #include "SavitarExport.h"
+ #include "SceneNode.h"
+-#include "../pugixml/src/pugixml.hpp"
++#include <pugixml.hpp>
+ 
+ #include <string>
+ namespace Savitar

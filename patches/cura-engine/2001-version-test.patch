@@ -1,0 +1,12 @@
+--- a/tests/GCodeExportTest.cpp
++++ b/tests/GCodeExportTest.cpp
+@@ -252,7 +252,8 @@ TEST_P(GriffinHeaderTest, HeaderGriffinF
+     EXPECT_EQ(std::string(";GENERATOR.NAME:Cura_SteamEngine"), token);
+     std::getline(result, token, '\n');
+     EXPECT_EQ(std::string(";GENERATOR.VERSION:"), token.substr(0, 19));
+-    EXPECT_EQ(std::string("master"), token.substr(19));
++    // debian/rules sets this to the actual package version instead of "master":
++    EXPECT_EQ(std::getenv("DEB_VERSION_UPSTREAM"), token.substr(19));
+     std::getline(result, token, '\n');
+     EXPECT_EQ(std::string(";GENERATOR.BUILD_DATE:"), token.substr(0, 22));
+     EXPECT_EQ(Date::getDate().toStringDashed(), token.substr(22));
