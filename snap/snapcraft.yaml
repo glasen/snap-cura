@@ -152,9 +152,9 @@ parts:
     source: https://github.com/Ultimaker/libArcus/archive/4.6.2.tar.gz
     override-pull: |
       snapcraftctl pull
-      patch -p1 < "/root/project/patches/Arcus/01-remove-rpath.patch"
-      patch -p1 < "/root/project/patches/Arcus/02-add-python-version.patch"
-      patch -p1 < "/root/project/patches/Arcus/0003-Allow-overriding-the-Python-version-in-CMake.patch"
+      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/Arcus/01-remove-rpath.patch"
+      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/Arcus/02-add-python-version.patch"
+      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/Arcus/0003-Allow-overriding-the-Python-version-in-CMake.patch"
     override-build: |
       snapcraftctl build
       mkdir -p ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
@@ -180,10 +180,10 @@ parts:
       - libpugixml1v5
     override-pull: |
       snapcraftctl pull
-      patch -p1 < "/root/project/patches/Savitar/2001-remove-rpath.patch"
-      patch -p1 < "/root/project/patches/Savitar/2002-system-pugixml.patch"
-      patch -p1 < "/root/project/patches/Savitar/2003-remove-cmake-python-install-hack.patch"
-      patch -p1 < "/root/project/patches/Savitar/2004-Allow-overriding-the-Python-version-in-CMake.patch"
+      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/Savitar/2001-remove-rpath.patch"
+      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/Savitar/2002-system-pugixml.patch"
+      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/Savitar/2003-remove-cmake-python-install-hack.patch"
+      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/Savitar/2004-Allow-overriding-the-Python-version-in-CMake.patch"
     override-build: |
       snapcraftctl build
       mkdir -p ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
@@ -262,8 +262,8 @@ parts:
       - libgomp1
     override-pull: |
       snapcraftctl pull
-      patch -p1 < "/root/project/patches/cura-engine/2000-remove-rpath.patch"
-      patch -p1 < "/root/project/patches/cura-engine/2001-version-test.patch"
+      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/cura-engine/2000-remove-rpath.patch"
+      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/cura-engine/2001-version-test.patch"
     after:
       - trimesh
     
@@ -294,7 +294,7 @@ parts:
     source: https://github.com/Ultimaker/Uranium/archive/4.6.2.tar.gz
     override-pull: |
       snapcraftctl pull
-      patch -p1 < "/root/project/patches/uranium/uranium.patch"
+      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/uranium/uranium.patch"
     stage-packages:
       - python3-numpy
       - python3-scipy
@@ -344,7 +344,7 @@ parts:
       - qtwayland5
     override-pull: |
       snapcraftctl pull
-      patch -p1 < "/root/project/patches/cura/cura.patch"
+      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/cura/cura.patch"
     after:
       - desktop-qt5
       - uranium
