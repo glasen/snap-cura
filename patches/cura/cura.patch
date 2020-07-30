@@ -1,6 +1,6 @@
 diff -upNr Cura-4.6.2.orig/CMakeLists.txt Cura-4.6.2.patched/CMakeLists.txt
 --- Cura-4.6.2.orig/CMakeLists.txt	2020-07-13 16:45:04.000000000 +0200
-+++ Cura-4.6.2.patched/CMakeLists.txt	2020-07-15 21:30:59.944653779 +0200
++++ Cura-4.6.2.patched/CMakeLists.txt	2020-07-30 21:27:02.588384308 +0200
 @@ -63,7 +63,8 @@ endif()
  
  
@@ -13,7 +13,7 @@ diff -upNr Cura-4.6.2.orig/CMakeLists.txt Cura-4.6.2.patched/CMakeLists.txt
  
 diff -upNr Cura-4.6.2.orig/cura/CuraVersion.py.in Cura-4.6.2.patched/cura/CuraVersion.py.in
 --- Cura-4.6.2.orig/cura/CuraVersion.py.in	2020-07-13 16:45:04.000000000 +0200
-+++ Cura-4.6.2.patched/cura/CuraVersion.py.in	2020-07-15 21:30:59.944653779 +0200
++++ Cura-4.6.2.patched/cura/CuraVersion.py.in	2020-07-30 21:27:02.588384308 +0200
 @@ -5,8 +5,8 @@ CuraAppName = "@CURA_APP_NAME@"
  CuraAppDisplayName = "@CURA_APP_DISPLAY_NAME@"
  CuraVersion = "@CURA_VERSION@"
@@ -28,7 +28,7 @@ diff -upNr Cura-4.6.2.orig/cura/CuraVersion.py.in Cura-4.6.2.patched/cura/CuraVe
 +CuraMarketplaceRoot = "@CURA_MARKETPLACE_ROOT@"
 diff -upNr Cura-4.6.2.orig/cura/UI/CuraSplashScreen.py Cura-4.6.2.patched/cura/UI/CuraSplashScreen.py
 --- Cura-4.6.2.orig/cura/UI/CuraSplashScreen.py	2020-07-13 16:45:04.000000000 +0200
-+++ Cura-4.6.2.patched/cura/UI/CuraSplashScreen.py	2020-07-15 23:08:53.995001280 +0200
++++ Cura-4.6.2.patched/cura/UI/CuraSplashScreen.py	2020-07-30 21:27:02.588384308 +0200
 @@ -70,12 +70,12 @@ class CuraSplashScreen(QSplashScreen):
          font = QFont()  # Using system-default font here
          font.setPixelSize(18)
@@ -57,7 +57,7 @@ diff -upNr Cura-4.6.2.orig/cura/UI/CuraSplashScreen.py Cura-4.6.2.patched/cura/U
          super().drawContents(painter)
 diff -upNr Cura-4.6.2.orig/cura/UI/ObjectsModel.py Cura-4.6.2.patched/cura/UI/ObjectsModel.py
 --- Cura-4.6.2.orig/cura/UI/ObjectsModel.py	2020-07-13 16:45:04.000000000 +0200
-+++ Cura-4.6.2.patched/cura/UI/ObjectsModel.py	2020-07-15 21:30:59.948653795 +0200
++++ Cura-4.6.2.patched/cura/UI/ObjectsModel.py	2020-07-30 21:27:02.588384308 +0200
 @@ -62,7 +62,7 @@ class ObjectsModel(ListModel):
          self._group_name_template = catalog.i18nc("@label", "Group #{group_nr}")
          self._group_name_prefix = self._group_name_template.split("#")[0]
@@ -69,7 +69,7 @@ diff -upNr Cura-4.6.2.orig/cura/UI/ObjectsModel.py Cura-4.6.2.patched/cura/UI/Ob
          if self._build_plate_number != nr:
 diff -upNr Cura-4.6.2.orig/plugins/FirmwareUpdateChecker/FirmwareUpdateChecker.py Cura-4.6.2.patched/plugins/FirmwareUpdateChecker/FirmwareUpdateChecker.py
 --- Cura-4.6.2.orig/plugins/FirmwareUpdateChecker/FirmwareUpdateChecker.py	2020-07-13 16:45:04.000000000 +0200
-+++ Cura-4.6.2.patched/plugins/FirmwareUpdateChecker/FirmwareUpdateChecker.py	2020-07-15 21:30:59.948653795 +0200
++++ Cura-4.6.2.patched/plugins/FirmwareUpdateChecker/FirmwareUpdateChecker.py	2020-07-30 21:27:02.588384308 +0200
 @@ -28,7 +28,7 @@ class FirmwareUpdateChecker(Extension):
  
          # Listen to a Signal that indicates a change in the list of printers, just if the user has enabled the
@@ -81,7 +81,7 @@ diff -upNr Cura-4.6.2.orig/plugins/FirmwareUpdateChecker/FirmwareUpdateChecker.p
  
 diff -upNr Cura-4.6.2.orig/plugins/PostProcessingPlugin/Script.py Cura-4.6.2.patched/plugins/PostProcessingPlugin/Script.py
 --- Cura-4.6.2.orig/plugins/PostProcessingPlugin/Script.py	2020-07-13 16:45:04.000000000 +0200
-+++ Cura-4.6.2.patched/plugins/PostProcessingPlugin/Script.py	2020-07-15 21:30:59.948653795 +0200
++++ Cura-4.6.2.patched/plugins/PostProcessingPlugin/Script.py	2020-07-30 21:27:02.588384308 +0200
 @@ -116,7 +116,7 @@ class Script:
          if not key in line or (';' in line and line.find(key) > line.find(';')):
              return default
@@ -93,7 +93,7 @@ diff -upNr Cura-4.6.2.orig/plugins/PostProcessingPlugin/Script.py Cura-4.6.2.pat
          try:
 diff -upNr Cura-4.6.2.orig/plugins/PostProcessingPlugin/scripts/ChangeAtZ.py Cura-4.6.2.patched/plugins/PostProcessingPlugin/scripts/ChangeAtZ.py
 --- Cura-4.6.2.orig/plugins/PostProcessingPlugin/scripts/ChangeAtZ.py	2020-07-13 16:45:04.000000000 +0200
-+++ Cura-4.6.2.patched/plugins/PostProcessingPlugin/scripts/ChangeAtZ.py	2020-07-15 21:30:59.948653795 +0200
++++ Cura-4.6.2.patched/plugins/PostProcessingPlugin/scripts/ChangeAtZ.py	2020-07-30 21:27:02.588384308 +0200
 @@ -294,7 +294,7 @@ class ChangeAtZ(Script):
              m = re.search("^[+-]?[0-9]*", subPart)
          else:
@@ -105,7 +105,7 @@ diff -upNr Cura-4.6.2.orig/plugins/PostProcessingPlugin/scripts/ChangeAtZ.py Cur
          try:
 diff -upNr Cura-4.6.2.orig/plugins/PostProcessingPlugin/scripts/ColorMix.py Cura-4.6.2.patched/plugins/PostProcessingPlugin/scripts/ColorMix.py
 --- Cura-4.6.2.orig/plugins/PostProcessingPlugin/scripts/ColorMix.py	2020-07-13 16:45:04.000000000 +0200
-+++ Cura-4.6.2.patched/plugins/PostProcessingPlugin/scripts/ColorMix.py	2020-07-15 21:30:59.948653795 +0200
++++ Cura-4.6.2.patched/plugins/PostProcessingPlugin/scripts/ColorMix.py	2020-07-30 21:27:02.588384308 +0200
 @@ -112,7 +112,7 @@ class ColorMix(Script):
              m = re.search("^[+-]?[0-9]*", subPart)
          else:
@@ -117,7 +117,7 @@ diff -upNr Cura-4.6.2.orig/plugins/PostProcessingPlugin/scripts/ColorMix.py Cura
          try:
 diff -upNr Cura-4.6.2.orig/plugins/RemovableDriveOutputDevice/RemovableDrivePlugin.py Cura-4.6.2.patched/plugins/RemovableDriveOutputDevice/RemovableDrivePlugin.py
 --- Cura-4.6.2.orig/plugins/RemovableDriveOutputDevice/RemovableDrivePlugin.py	2020-07-13 16:45:04.000000000 +0200
-+++ Cura-4.6.2.patched/plugins/RemovableDriveOutputDevice/RemovableDrivePlugin.py	2020-07-15 21:30:59.948653795 +0200
++++ Cura-4.6.2.patched/plugins/RemovableDriveOutputDevice/RemovableDrivePlugin.py	2020-07-30 21:27:02.588384308 +0200
 @@ -1,9 +1,7 @@
  # Copyright (c) 2017 Ultimaker B.V.
  # Cura is released under the terms of the LGPLv3 or higher.
@@ -167,7 +167,7 @@ diff -upNr Cura-4.6.2.orig/plugins/RemovableDriveOutputDevice/RemovableDrivePlug
          # First, find and add all new or changed keys
 diff -upNr Cura-4.6.2.orig/plugins/SliceInfoPlugin/SliceInfo.py Cura-4.6.2.patched/plugins/SliceInfoPlugin/SliceInfo.py
 --- Cura-4.6.2.orig/plugins/SliceInfoPlugin/SliceInfo.py	2020-07-13 16:45:04.000000000 +0200
-+++ Cura-4.6.2.patched/plugins/SliceInfoPlugin/SliceInfo.py	2020-07-15 21:30:59.948653795 +0200
++++ Cura-4.6.2.patched/plugins/SliceInfoPlugin/SliceInfo.py	2020-07-30 21:27:02.588384308 +0200
 @@ -40,7 +40,7 @@ class SliceInfo(QObject, Extension):
          self._application = CuraApplication.getInstance()
  
@@ -179,7 +179,7 @@ diff -upNr Cura-4.6.2.orig/plugins/SliceInfoPlugin/SliceInfo.py Cura-4.6.2.patch
          self._more_info_dialog = None
 diff -upNr Cura-4.6.2.orig/plugins/USBPrinting/USBPrinterOutputDeviceManager.py Cura-4.6.2.patched/plugins/USBPrinting/USBPrinterOutputDeviceManager.py
 --- Cura-4.6.2.orig/plugins/USBPrinting/USBPrinterOutputDeviceManager.py	2020-07-13 16:45:04.000000000 +0200
-+++ Cura-4.6.2.patched/plugins/USBPrinting/USBPrinterOutputDeviceManager.py	2020-07-15 21:30:59.948653795 +0200
++++ Cura-4.6.2.patched/plugins/USBPrinting/USBPrinterOutputDeviceManager.py	2020-07-30 21:57:21.093681002 +0200
 @@ -1,13 +1,11 @@
  # Copyright (c) 2018 Ultimaker B.V.
  # Cura is released under the terms of the LGPLv3 or higher.
@@ -241,9 +241,26 @@ diff -upNr Cura-4.6.2.orig/plugins/USBPrinting/USBPrinterOutputDeviceManager.py 
  
      ##  Helper to identify serial ports (and scan for them)
      def _addRemovePorts(self, serial_ports):
+@@ -109,9 +105,15 @@ class USBPrinterOutputDeviceManager(QObj
+     #   \param only_list_usb If true, only usb ports are listed
+     def getSerialPortList(self, only_list_usb = False):
+         base_list = []
+-        for port in serial.tools.list_ports.comports():
++        try:
++            port_list = serial.tools.list_ports.comports()
++        except TypeError:  # Bug in PySerial causes a TypeError if port gets disconnected while processing.
++            port_list = []
++        for port in port_list:
+             if not isinstance(port, tuple):
+                 port = (port.device, port.description, port.hwid)
++            if not port[2]:  # HWID may be None if the device is not USB or the system doesn't report the type.
++                continue
+             if only_list_usb and not port[2].startswith("USB"):
+                 continue
+ 
 diff -upNr Cura-4.6.2.orig/plugins/USBPrinting/USBPrinterOutputDevice.py Cura-4.6.2.patched/plugins/USBPrinting/USBPrinterOutputDevice.py
 --- Cura-4.6.2.orig/plugins/USBPrinting/USBPrinterOutputDevice.py	2020-07-13 16:45:04.000000000 +0200
-+++ Cura-4.6.2.patched/plugins/USBPrinting/USBPrinterOutputDevice.py	2020-07-15 21:30:59.948653795 +0200
++++ Cura-4.6.2.patched/plugins/USBPrinting/USBPrinterOutputDevice.py	2020-07-30 21:27:02.588384308 +0200
 @@ -260,8 +260,8 @@ class USBPrinterOutputDevice(PrinterOutp
                      self.sendCommand("M105")
                      self._last_temperature_request = time()
