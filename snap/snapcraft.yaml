@@ -1,5 +1,5 @@
 name: cura-slicer
-version: '4.6.2'
+version: '4.7.0'
 base: core20
 summary: Ultimaker Cura
 description: |
@@ -148,8 +148,9 @@ parts:
       - -DBUILD_EXAMPLES=OFF
       - -DCMAKE_INSTALL_PREFIX=/usr/
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
-    source-type: tar
-    source: https://github.com/Ultimaker/libArcus/archive/4.6.2.tar.gz
+    source-type: git
+    source: https://github.com/Ultimaker/libArcus.git
+    source-branch: "4.7"
     override-pull: |
       snapcraftctl pull
       patch -p1 < "/root/project/patches/Arcus/01-remove-rpath.patch"
@@ -172,8 +173,8 @@ parts:
       - -DCMAKE_BUILD_TYPE=RELEASE-
       - -DCMAKE_INSTALL_PREFIX=/usr/
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
-    source-type: tar
-    source: https://github.com/Ultimaker/libSavitar/archive/4.6.2.tar.gz
+    source: https://github.com/Ultimaker/libSavitar.git
+    source-branch: "4.7"
     build-packages:
       - libpugixml-dev
     stage-packages:
@@ -199,8 +200,8 @@ parts:
       - -DCMAKE_BUILD_TYPE=RELEASE
       - -DCMAKE_INSTALL_PREFIX=/usr/
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
-    source-type: tar
-    source: https://github.com/Ultimaker/libCharon/archive/4.6.2.tar.gz
+    source: https://github.com/Ultimaker/libCharon.git
+    source-branch: "4.7"
     stage-packages:
       - python3-urllib3
       - python3-certifi
@@ -211,13 +212,13 @@ parts:
   trimesh:
     plugin: python
     source-type: tar
-    source: https://github.com/mikedh/trimesh/archive/3.7.10.tar.gz
+    source: https://github.com/mikedh/trimesh/archive/3.8.4.tar.gz
     after:
       - libcharon
     override-build: |
       python3 setup.py --no-user-cfg install --prefix="${SNAPCRAFT_PART_INSTALL}/usr"
       mkdir -p ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
-      mv ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3.8/site-packages/trimesh-3.7.10-py3.8.egg/trimesh ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
+      mv ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3.8/site-packages/trimesh-3.8.4-py3.8.egg/trimesh ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
       rm -rf ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3.8
     stage:
       -  -usr/bin/easy_install
@@ -229,13 +230,13 @@ parts:
   sentry-sdk:
     plugin: python
     source-type: tar
-    source: https://github.com/getsentry/sentry-python/releases/download/0.16.1/sentry-sdk-0.16.1.tar.gz
+    source: https://github.com/getsentry/sentry-python/releases/download/0.16.5/sentry-sdk-0.16.5.tar.gz
     after:
       - trimesh
     override-build: |
       python3 setup.py --no-user-cfg install --prefix="${SNAPCRAFT_PART_INSTALL}/usr"
       mkdir -p ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
-      mv ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3.8/site-packages/sentry_sdk-0.16.1-py3.8.egg/sentry_sdk ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
+      mv ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3.8/site-packages/sentry_sdk-0.16.5-py3.8.egg/sentry_sdk ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
       rm -rf ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3.8
     stage:
       -  -usr/bin/easy_install
@@ -253,8 +254,8 @@ parts:
       - -DUSE_SYSTEM_LIBS=ON
       - -Wno-dev
       - -DPolyclipping_INCLUDE_DIRS=/usr/include/polyclipping
-    source-type: tar
-    source: https://github.com/Ultimaker/CuraEngine/archive/4.6.2.tar.gz
+    source: https://github.com/Ultimaker/CuraEngine.git
+    source-branch: "4.7"
     build-packages:
       - rapidjson-dev
       - libpolyclipping-dev
@@ -274,8 +275,8 @@ parts:
       - -DCMAKE_BUILD_TYPE=RELEASE
       - -DCMAKE_INSTALL_PREFIX=/usr/
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
-    source-type: tar
-    source: https://github.com/Ultimaker/fdm_materials/archive/4.6.2.tar.gz
+    source: https://github.com/Ultimaker/fdm_materials.git
+    source-branch: "4.7"
     after: 
       - cura-engine
 
@@ -290,8 +291,8 @@ parts:
       - -DGETTEXT_MSGMERGE_EXECUTABLE=msgmerge
       - -DCURA_BINARY_DATA_DIRECTORY=/usr/share/uranium
       - -DUM_NO_INSTALL_PLUGINS=UpdateChecker
-    source-type: tar
-    source: https://github.com/Ultimaker/Uranium/archive/4.6.2.tar.gz
+    source: https://github.com/Ultimaker/Uranium.git
+    source-branch: "4.7"
     override-pull: |
       snapcraftctl pull
       patch -p1 < "/root/project/patches/uranium/uranium.patch"
@@ -322,10 +323,10 @@ parts:
       - -DCMAKE_INSTALL_PREFIX=/usr/
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
       - -DURANIUM_DIR=${SNAPCRAFT_STAGE}/usr/share/uranium
-      - -DCURA_VERSION=4.6.2
+      - -DCURA_VERSION=4.7.0
       - -DCURA_BUILDTYPE=SNAP
-    source-type: tar
-    source: https://github.com/Ultimaker/Cura/archive/4.6.2.tar.gz
+    source: https://github.com/Ultimaker/Cura.git
+    source-branch: "4.7"
     stage-packages:
       - fonts-open-sans
       - python3-cryptography

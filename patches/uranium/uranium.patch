@@ -1,6 +1,7 @@
-diff -upNr Uranium-4.6.2.orig/CMakeLists.txt Uranium-4.6.2.patched/CMakeLists.txt
---- Uranium-4.6.2.orig/CMakeLists.txt	2020-05-26 16:31:37.000000000 +0200
-+++ Uranium-4.6.2.patched/CMakeLists.txt	2020-07-15 21:31:14.092713019 +0200
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c68058e7..c7e5f734 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
 @@ -50,8 +50,9 @@ if(EXISTS /etc/debian_version)
  else()
      install(DIRECTORY UM DESTINATION lib${LIB_SUFFIX}/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages)
@@ -13,34 +14,43 @@ diff -upNr Uranium-4.6.2.orig/CMakeLists.txt Uranium-4.6.2.patched/CMakeLists.tx
  install(DIRECTORY resources DESTINATION ${CMAKE_INSTALL_DATADIR}/uranium)
  
  # Detect plugins to install
-diff -upNr Uranium-4.6.2.orig/plugins/ConsoleLogger/ConsoleLogger.py Uranium-4.6.2.patched/plugins/ConsoleLogger/ConsoleLogger.py
---- Uranium-4.6.2.orig/plugins/ConsoleLogger/ConsoleLogger.py	2020-05-26 16:31:37.000000000 +0200
-+++ Uranium-4.6.2.patched/plugins/ConsoleLogger/ConsoleLogger.py	2020-07-15 21:31:14.092713019 +0200
-@@ -25,7 +25,7 @@ class ConsoleLogger(LogOutput):
-     def __init__(self) -> None:
+diff --git a/UM/Settings/InstanceContainer.py b/UM/Settings/InstanceContainer.py
+index 0f3a163b..5feed4e8 100644
+--- a/UM/Settings/InstanceContainer.py
++++ b/UM/Settings/InstanceContainer.py
+@@ -50,9 +50,9 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
+     """A container for SettingInstance objects."""
+ 
+     Version = 4
+-    version_regex = re.compile("\nversion ?= ?(\d+)")
+-    setting_version_regex = re.compile("\nsetting_version ?= ?(\d+)")
+-    type_regex = re.compile("\ntype ?= ?(\w+)")
++    version_regex = re.compile("\nversion ?= ?(\\d+)")
++    setting_version_regex = re.compile("\nsetting_version ?= ?(\\d+)")
++    type_regex = re.compile("\ntype ?= ?(\\w+)")
+ 
+     def __init__(self, container_id: str, parent: QObject = None, *args: Any, **kwargs: Any) -> None:
+         """Constructor
+diff --git a/UM/VersionUpgrade.py b/UM/VersionUpgrade.py
+index 2b561ce7..5d92f871 100644
+--- a/UM/VersionUpgrade.py
++++ b/UM/VersionUpgrade.py
+@@ -19,8 +19,8 @@ class VersionUpgrade(PluginObject):
+         """Initialises a version upgrade plugin instance."""
+ 
          super().__init__()
-         self._logger = logging.getLogger(self._name) # Create python logger
--        self._logger.setLevel(logging.DEBUG)
-+        self._logger.setLevel(logging.ERROR)
-         stream_handler = logging.StreamHandler() # Log to stream
-         stream_handler.setFormatter(logging_formatter)
-         self._logger.addHandler(stream_handler)
-diff -upNr Uranium-4.6.2.orig/UM/Settings/InstanceContainer.py Uranium-4.6.2.patched/UM/Settings/InstanceContainer.py
---- Uranium-4.6.2.orig/UM/Settings/InstanceContainer.py	2020-05-26 16:31:37.000000000 +0200
-+++ Uranium-4.6.2.patched/UM/Settings/InstanceContainer.py	2020-07-15 22:08:15.117023750 +0200
-@@ -545,7 +545,7 @@ class InstanceContainer(QObject, Contain
-                 common_path = os.path.commonpath([install_prefix, file_name])
-             except ValueError:
-                 common_path = ""
--            if common_path is "" or not common_path.startswith(install_prefix):
-+            if common_path == "" or not common_path.startswith(install_prefix):
-                 if trust_instance.signatureFileExistsFor(file_name):
-                     _containerRegistry.setExplicitReadOnly(self.getId())  # TODO???: self._read_only = True
-                     if not trust_instance.signedFileCheck(file_name):
-diff -upNr Uranium-4.6.2.orig/UM/VersionUpgradeManager.py Uranium-4.6.2.patched/UM/VersionUpgradeManager.py
---- Uranium-4.6.2.orig/UM/VersionUpgradeManager.py	2020-05-26 16:31:37.000000000 +0200
-+++ Uranium-4.6.2.patched/UM/VersionUpgradeManager.py	2020-07-15 21:31:14.092713019 +0200
-@@ -92,21 +92,21 @@ class VersionUpgradeManager:
+-        self._version_regex = re.compile("\nversion ?= ?(\d+)")
+-        self._setting_version_regex = re.compile("\nsetting_version ?= ?(\d+)")
++        self._version_regex = re.compile("\nversion ?= ?(\\d+)")
++        self._setting_version_regex = re.compile("\nsetting_version ?= ?(\\d+)")
+ 
+     def getCfgVersion(self, serialised: str) -> int:
+         """
+diff --git a/UM/VersionUpgradeManager.py b/UM/VersionUpgradeManager.py
+index bcaa9c2d..6b06865c 100644
+--- a/UM/VersionUpgradeManager.py
++++ b/UM/VersionUpgradeManager.py
+@@ -95,21 +95,21 @@ class VersionUpgradeManager:
  
          #Regular expressions of the files that should not be checked, such as log files.
          self._ignored_files = [
@@ -77,24 +87,16 @@ diff -upNr Uranium-4.6.2.orig/UM/VersionUpgradeManager.py Uranium-4.6.2.patched/
          ]  # type: List[str]
  
      def registerIgnoredFile(self, file_name: str) -> None:
-diff -upNr Uranium-4.6.2.orig/UM/View/GL/ShaderProgram.py Uranium-4.6.2.patched/UM/View/GL/ShaderProgram.py
---- Uranium-4.6.2.orig/UM/View/GL/ShaderProgram.py	2020-05-26 16:31:37.000000000 +0200
-+++ Uranium-4.6.2.patched/UM/View/GL/ShaderProgram.py	2020-07-15 21:47:26.190101369 +0200
-@@ -337,13 +337,13 @@ class ShaderProgram:
-         elif type(value) is Color:
-             self._shader_program.setUniformValue(uniform,
-                 QColor(value.r * 255, value.g * 255, value.b * 255, value.a * 255))
--        elif type(value) is list and len(value) is 2:
-+        elif type(value) == list and len(value) == 2:
-             self._shader_program.setUniformValue(uniform, QVector2D(value[0], value[1]))
--        elif type(value) is list and len(value) is 3:
-+        elif type(value) == list and len(value) == 3:
-             self._shader_program.setUniformValue(uniform, QVector3D(value[0], value[1], value[2]))
--        elif type(value) is list and len(value) is 4:
-+        elif type(value) == list and len(value) == 4:
-             self._shader_program.setUniformValue(uniform, QVector4D(value[0], value[1], value[2], value[3]))
--        elif type(value) is list and type(value[0]) is list and len(value[0]) is 2:
-+        elif type(value) == list and type(value[0]) == list and len(value[0]) == 2:
-             self._shader_program.setUniformValueArray(uniform, [QVector2D(i[0], i[1]) for i in value])
-         else:
-             self._shader_program.setUniformValue(uniform, value)
+diff --git a/plugins/ConsoleLogger/ConsoleLogger.py b/plugins/ConsoleLogger/ConsoleLogger.py
+index 871c0523..d93a8dc9 100644
+--- a/plugins/ConsoleLogger/ConsoleLogger.py
++++ b/plugins/ConsoleLogger/ConsoleLogger.py
+@@ -25,7 +25,7 @@ class ConsoleLogger(LogOutput):
+     def __init__(self) -> None:
+         super().__init__()
+         self._logger = logging.getLogger(self._name) # Create python logger
+-        self._logger.setLevel(logging.DEBUG)
++        self._logger.setLevel(logging.ERROR)
+         stream_handler = logging.StreamHandler() # Log to stream
+         stream_handler.setFormatter(logging_formatter)
+         self._logger.addHandler(stream_handler)
