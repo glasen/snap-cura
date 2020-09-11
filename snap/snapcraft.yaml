@@ -46,7 +46,6 @@ apps:
     plugs:
       - network
       - network-bind
-      - netlink-connector
       - home
     
   cura:
@@ -68,7 +67,6 @@ apps:
       - network
       - network-bind
       - network-manager-observe
-      - netlink-connector
       - home
       - opengl
       - removable-media
