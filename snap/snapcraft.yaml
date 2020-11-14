@@ -1,5 +1,5 @@
 name: cura-slicer
-version: '4.7.0'
+version: '4.8.0'
 base: core20
 summary: Ultimaker Cura
 description: |
@@ -88,12 +88,17 @@ build-packages:
   - gettext
   - debhelper
   - dh-python
+  - pkg-config
   - python3-all-dev
   - pylint
   - python3-pytest
   - python3-numpy
   - python3-setuptools
   - python3-wheel
+  - libboost-dev
+  - libpolyclipping-dev
+  - libnlopt-dev
+  - libnlopt-cxx-dev
 
 parts:
   launchers: # custom launcher to set QT_QPA_PLATFORMTHEME=gtk3 correctly
@@ -148,12 +153,12 @@ parts:
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
     source-type: git
     source: https://github.com/Ultimaker/libArcus.git
-    source-branch: "4.7"
+    source-branch: "4.8"
     override-pull: |
       snapcraftctl pull
       patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/Arcus/01-remove-rpath.patch"
       patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/Arcus/02-add-python-version.patch"
-      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/Arcus/0003-Allow-overriding-the-Python-version-in-CMake.patch"
+      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/Arcus/03-Allow-overriding-the-Python-version-in-CMake.patch"
     override-build: |
       snapcraftctl build
       mkdir -p ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
@@ -172,7 +177,7 @@ parts:
       - -DCMAKE_INSTALL_PREFIX=/usr/
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
     source: https://github.com/Ultimaker/libSavitar.git
-    source-branch: "4.7"
+    source-branch: "4.8"
     build-packages:
       - libpugixml-dev
     stage-packages:
@@ -199,7 +204,7 @@ parts:
       - -DCMAKE_INSTALL_PREFIX=/usr/
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
     source: https://github.com/Ultimaker/libCharon.git
-    source-branch: "4.7"
+    source-branch: "4.8"
     stage-packages:
       - python3-urllib3
       - python3-certifi
@@ -210,13 +215,13 @@ parts:
   trimesh:
     plugin: python
     source-type: tar
-    source: https://github.com/mikedh/trimesh/archive/3.8.4.tar.gz
+    source: https://github.com/mikedh/trimesh/archive/3.8.12.tar.gz
     after:
       - libcharon
     override-build: |
       python3 setup.py --no-user-cfg install --prefix="${SNAPCRAFT_PART_INSTALL}/usr"
       mkdir -p ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
-      mv ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3.8/site-packages/trimesh-3.8.4-py3.8.egg/trimesh ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
+      mv ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3.8/site-packages/trimesh-3.8.12-py3.8.egg/trimesh ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
       rm -rf ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3.8
     stage:
       -  -usr/bin/easy_install
@@ -228,19 +233,45 @@ parts:
   sentry-sdk:
     plugin: python
     source-type: tar
-    source: https://github.com/getsentry/sentry-python/releases/download/0.16.5/sentry-sdk-0.16.5.tar.gz
+    source: https://github.com/getsentry/sentry-python/releases/download/0.19.2/sentry-sdk-0.19.2.tar.gz
     after:
       - trimesh
     override-build: |
       python3 setup.py --no-user-cfg install --prefix="${SNAPCRAFT_PART_INSTALL}/usr"
       mkdir -p ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
-      mv ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3.8/site-packages/sentry_sdk-0.16.5-py3.8.egg/sentry_sdk ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
+      mv ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3.8/site-packages/sentry_sdk-0.19.2-py3.8.egg/sentry_sdk ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
       rm -rf ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3.8
     stage:
       -  -usr/bin/easy_install
       -  -usr/bin/f2py
       -  -usr/bin/f2py3
       -  -usr/bin/f2py3.8
+
+
+  libnest2d:
+    plugin: cmake
+    cmake-parameters: 
+      - -DLIBNEST2D_HEADER_ONLY=OFF
+      - -DCMAKE_INSTALL_PREFIX=/usr/
+      - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
+    source: https://github.com/Ultimaker/libnest2d.git
+    source-branch: "master"  
+    after:
+      - sentry-sdk
+
+
+  pynest2d:
+    plugin: cmake
+    source: https://github.com/Ultimaker/pynest2d/archive/4.8.tar.gz
+    source-type: tar
+    cmake-parameters: 
+      - -DCMAKE_INSTALL_PREFIX=/usr/
+      - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
+    stage-packages:
+      - libnlopt0
+    after:
+      - libnest2d
+
 
 
   cura-engine:
@@ -253,10 +284,9 @@ parts:
       - -Wno-dev
       - -DPolyclipping_INCLUDE_DIRS=/usr/include/polyclipping
     source: https://github.com/Ultimaker/CuraEngine.git
-    source-branch: "4.7"
+    source-branch: "4.8"
     build-packages:
       - rapidjson-dev
-      - libpolyclipping-dev
     stage-packages:
       - libgomp1
     override-pull: |
@@ -274,7 +304,7 @@ parts:
       - -DCMAKE_INSTALL_PREFIX=/usr/
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
     source: https://github.com/Ultimaker/fdm_materials.git
-    source-branch: "4.7"
+    source-branch: "4.8"
     after: 
       - cura-engine
 
@@ -290,7 +320,7 @@ parts:
       - -DCURA_BINARY_DATA_DIRECTORY=/usr/share/uranium
       - -DUM_NO_INSTALL_PLUGINS=UpdateChecker
     source: https://github.com/Ultimaker/Uranium.git
-    source-branch: "4.7"
+    source-branch: "4.8"
     override-pull: |
       snapcraftctl pull
       patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/uranium/uranium.patch"
@@ -321,10 +351,10 @@ parts:
       - -DCMAKE_INSTALL_PREFIX=/usr/
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
       - -DURANIUM_DIR=${SNAPCRAFT_STAGE}/usr/share/uranium
-      - -DCURA_VERSION=4.7.0
+      - -DCURA_VERSION=4.8.0
       - -DCURA_BUILDTYPE=SNAP
     source: https://github.com/Ultimaker/Cura.git
-    source-branch: "4.7"
+    source-branch: "4.8"
     stage-packages:
       - fonts-open-sans
       - python3-cryptography

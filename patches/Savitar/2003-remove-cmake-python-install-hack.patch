@@ -1,18 +1,12 @@
-Author: Gregor Riepl <onitake@gmail.com>
-Description: Install to correct site-packages dir, based on Python version.
-  The Debian hack in CMakeLists was removed upstream, but python3 doesn't
-  report a Python-specific site-packages folder.
-  This is required, because SIP packages need to be compiled and installed
-  for every Python version separately.
-Index: libSavitar/CMakeLists.txt
-===================================================================
---- libSavitar.orig/CMakeLists.txt	2019-09-11 01:33:25.174453155 +0200
-+++ libSavitar/CMakeLists.txt	2019-09-11 01:34:50.291995909 +0200
-@@ -38,6 +38,8 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f22d42e..f670fe4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -30,6 +30,8 @@ if(BUILD_PYTHON)
          set(LIB_SUFFIX "")
      endif()
  
-+    set(Python3_SITEARCH lib${LIB_SUFFIX}/python${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}/site-packages CACHE STRING "Directory to install Python bindings to")
++    set(Python3_SITEARCH lib${LIB_SUFFIX}/python3.8/site-packages CACHE STRING "Directory to install Python bindings to")
 +
      include_directories(python/ src/ ${SIP_INCLUDE_DIRS} ${Python3_INCLUDE_DIRS})
  endif()

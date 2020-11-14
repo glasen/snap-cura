@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 035191ebf..deca8331f 100644
+index 3993d7675..32741d358 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -63,7 +63,8 @@ endif()
+@@ -60,7 +60,8 @@ endif()
  
  
  install(DIRECTORY resources
@@ -13,10 +13,10 @@ index 035191ebf..deca8331f 100644
  include(CuraPluginInstall)
  
 diff --git a/cura/CuraVersion.py.in b/cura/CuraVersion.py.in
-index 32a67b8ba..5c629b962 100644
+index ce2264f5f..61cb12623 100644
 --- a/cura/CuraVersion.py.in
 +++ b/cura/CuraVersion.py.in
-@@ -5,8 +5,8 @@ CuraAppName = "@CURA_APP_NAME@"
+@@ -5,7 +5,7 @@ CuraAppName = "@CURA_APP_NAME@"
  CuraAppDisplayName = "@CURA_APP_DISPLAY_NAME@"
  CuraVersion = "@CURA_VERSION@"
  CuraBuildType = "@CURA_BUILDTYPE@"
@@ -25,9 +25,6 @@ index 32a67b8ba..5c629b962 100644
  CuraCloudAPIRoot = "@CURA_CLOUD_API_ROOT@"
  CuraCloudAPIVersion = "@CURA_CLOUD_API_VERSION@"
  CuraCloudAccountAPIRoot = "@CURA_CLOUD_ACCOUNT_API_ROOT@"
--CuraMarketplaceRoot = "@CURA_MARKETPLACE_ROOT@"
-\ No newline at end of file
-+CuraMarketplaceRoot = "@CURA_MARKETPLACE_ROOT@"
 diff --git a/cura/UI/CuraSplashScreen.py b/cura/UI/CuraSplashScreen.py
 index 407402086..1d3e086e3 100644
 --- a/cura/UI/CuraSplashScreen.py
@@ -162,7 +159,7 @@ index d59d1296e..139c475c4 100644
      def _addRemoveDrives(self, drives):
          # First, find and add all new or changed keys
 diff --git a/plugins/SliceInfoPlugin/SliceInfo.py b/plugins/SliceInfoPlugin/SliceInfo.py
-index 284389064..89b715477 100755
+index 6eed649cc..a1d73a7c7 100755
 --- a/plugins/SliceInfoPlugin/SliceInfo.py
 +++ b/plugins/SliceInfoPlugin/SliceInfo.py
 @@ -43,7 +43,7 @@ class SliceInfo(QObject, Extension):
@@ -175,10 +172,10 @@ index 284389064..89b715477 100755
  
          self._more_info_dialog = None
 diff --git a/plugins/USBPrinting/USBPrinterOutputDevice.py b/plugins/USBPrinting/USBPrinterOutputDevice.py
-index f8d344839..f7c1377c9 100644
+index 30694b074..8f09f209f 100644
 --- a/plugins/USBPrinting/USBPrinterOutputDevice.py
 +++ b/plugins/USBPrinting/USBPrinterOutputDevice.py
-@@ -268,8 +268,8 @@ class USBPrinterOutputDevice(PrinterOutputDevice):
+@@ -272,8 +272,8 @@ class USBPrinterOutputDevice(PrinterOutputDevice):
                      self.sendCommand("M105")
                      self._last_temperature_request = time()
  
@@ -189,7 +186,7 @@ index f8d344839..f7c1377c9 100644
                  # Update all temperature values
                  matched_extruder_nrs = []
                  for match in extruder_temperature_matches:
-@@ -291,7 +291,7 @@ class USBPrinterOutputDevice(PrinterOutputDevice):
+@@ -295,7 +295,7 @@ class USBPrinterOutputDevice(PrinterOutputDevice):
                      if match[2]:
                          extruder.updateTargetHotendTemperature(float(match[2]))
  

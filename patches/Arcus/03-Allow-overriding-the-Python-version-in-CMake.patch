@@ -1,0 +1,28 @@
+diff -upNr libArcus.orig/cmake/FindSIP.cmake libArcus.patched/cmake/FindSIP.cmake
+--- libArcus.orig/cmake/FindSIP.cmake	2020-11-08 12:27:25.270920442 +0100
++++ libArcus.patched/cmake/FindSIP.cmake	2020-11-08 12:32:16.863551097 +0100
+@@ -26,8 +26,8 @@ endif()
+ 
+ # FIXME: Use FindPython3 to find Python, new in CMake 3.12.
+ # However currently on our CI server it finds the wrong Python version and then doesn't find the headers.
+-find_package(PythonInterp 3.5 REQUIRED)
+-find_package(PythonLibs 3.5 REQUIRED)
++find_package(PythonInterp 3.8 REQUIRED)
++find_package(PythonLibs 3.8 REQUIRED)
+ 
+ # Define variables that are available in FindPython3, so there's no need to branch off in the later part.
+ set(Python3_EXECUTABLE ${PYTHON_EXECUTABLE})
+diff -upNr libArcus.orig/CMakeLists.txt libArcus.patched/CMakeLists.txt
+--- libArcus.orig/CMakeLists.txt	2020-11-08 12:27:25.270920442 +0100
++++ libArcus.patched/CMakeLists.txt	2020-11-08 12:32:59.615215493 +0100
+@@ -26,8 +26,8 @@ if(BUILD_PYTHON)
+ 
+     # FIXME: Use FindPython3 to find Python, new in CMake 3.12.
+     # However currently on our CI server it finds the wrong Python version and then doesn't find the headers.
+-    find_package(PythonInterp 3.4 REQUIRED)
+-    find_package(PythonLibs 3.4 REQUIRED)
++    find_package(PythonInterp 3.8 REQUIRED)
++    find_package(PythonLibs 3.8 REQUIRED)
+ 
+     find_package(SIP REQUIRED)
+     if(NOT DEFINED LIB_SUFFIX)
