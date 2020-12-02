@@ -262,7 +262,7 @@ parts:
 
   pynest2d:
     plugin: cmake
-    source: https://github.com/Ultimaker/pynest2d/archive/4.8.tar.gz
+    source: https://github.com/Ultimaker/pynest2d/archive/4.8.0.tar.gz
     source-type: tar
     cmake-parameters: 
       - -DCMAKE_INSTALL_PREFIX=/usr/
