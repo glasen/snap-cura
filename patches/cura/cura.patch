@@ -1,7 +1,6 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3993d7675..32741d358 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
+diff -upNr Cura.orig/CMakeLists.txt Cura.patched/CMakeLists.txt
+--- Cura.orig/CMakeLists.txt	2021-05-15 16:45:16.449468318 +0200
++++ Cura.patched/CMakeLists.txt	2021-05-15 16:46:00.297584738 +0200
 @@ -60,7 +60,8 @@ endif()
  
  
@@ -12,10 +11,9 @@ index 3993d7675..32741d358 100644
  
  include(CuraPluginInstall)
  
-diff --git a/cura/CuraVersion.py.in b/cura/CuraVersion.py.in
-index ce2264f5f..61cb12623 100644
---- a/cura/CuraVersion.py.in
-+++ b/cura/CuraVersion.py.in
+diff -upNr Cura.orig/cura/CuraVersion.py.in Cura.patched/cura/CuraVersion.py.in
+--- Cura.orig/cura/CuraVersion.py.in	2021-05-15 16:45:16.453468329 +0200
++++ Cura.patched/cura/CuraVersion.py.in	2021-05-15 16:46:00.297584738 +0200
 @@ -5,7 +5,7 @@ CuraAppName = "@CURA_APP_NAME@"
  CuraAppDisplayName = "@CURA_APP_DISPLAY_NAME@"
  CuraVersion = "@CURA_VERSION@"
@@ -25,40 +23,36 @@ index ce2264f5f..61cb12623 100644
  CuraCloudAPIRoot = "@CURA_CLOUD_API_ROOT@"
  CuraCloudAPIVersion = "@CURA_CLOUD_API_VERSION@"
  CuraCloudAccountAPIRoot = "@CURA_CLOUD_ACCOUNT_API_ROOT@"
-diff --git a/cura/UI/CuraSplashScreen.py b/cura/UI/CuraSplashScreen.py
-index 407402086..1d3e086e3 100644
---- a/cura/UI/CuraSplashScreen.py
-+++ b/cura/UI/CuraSplashScreen.py
+diff -upNr Cura.orig/cura/UI/CuraSplashScreen.py Cura.patched/cura/UI/CuraSplashScreen.py
+--- Cura.orig/cura/UI/CuraSplashScreen.py	2021-05-15 16:45:16.465468360 +0200
++++ Cura.patched/cura/UI/CuraSplashScreen.py	2021-05-15 18:19:42.692664304 +0200
 @@ -70,12 +70,12 @@ class CuraSplashScreen(QSplashScreen):
          font = QFont()  # Using system-default font here
          font.setPixelSize(18)
          painter.setFont(font)
--        painter.drawText(60, 70 + self._version_y_offset, 330 * self._scale, 230 * self._scale, Qt.AlignLeft | Qt.AlignTop, version[0])
-+        painter.drawText(60, 70 + int(self._version_y_offset), 330 * self._scale, 230 * self._scale, int(Qt.AlignLeft | Qt.AlignTop), version[0])
+-        painter.drawText(60, 70 + self._version_y_offset, round(330 * self._scale), round(230 * self._scale), Qt.AlignLeft | Qt.AlignTop, version[0])
++        painter.drawText(60, 70 + round(self._version_y_offset), round(330 * self._scale), round(230 * self._scale), int(Qt.AlignLeft) | int(Qt.AlignTop), version[0])
          if len(version) > 1:
              font.setPixelSize(16)
              painter.setFont(font)
              painter.setPen(QColor(200, 200, 200, 255))
--            painter.drawText(247, 105 + self._version_y_offset, 330 * self._scale, 255 * self._scale, Qt.AlignLeft | Qt.AlignTop, version[1])
-+            painter.drawText(247, 105 + int(self._version_y_offset), 330 * self._scale, 255 * self._scale, int(Qt.AlignLeft | Qt.AlignTop), version[1])
+-            painter.drawText(247, 105 + self._version_y_offset, round(330 * self._scale), round(255 * self._scale), Qt.AlignLeft | Qt.AlignTop, version[1])
++            painter.drawText(247, 105 + round(self._version_y_offset), round(330 * self._scale), round(255 * self._scale), int(Qt.AlignLeft) | int(Qt.AlignTop), version[1])
          painter.setPen(QColor(255, 255, 255, 255))
  
          # Draw the loading image
-@@ -93,9 +93,7 @@ class CuraSplashScreen(QSplashScreen):
-             pen.setColor(QColor(255, 255, 255, 255))
+@@ -94,7 +94,7 @@ class CuraSplashScreen(QSplashScreen):
              painter.setPen(pen)
              painter.setFont(font)
--            painter.drawText(100, 128, 170, 64,
+             painter.drawText(100, 128, 170, 64,
 -                             Qt.AlignLeft | Qt.AlignVCenter | Qt.TextWordWrap,
--                             self._current_message)
-+            painter.drawText(100, 128, 170, 64, int(Qt.AlignLeft | Qt.AlignVCenter | Qt.TextWordWrap), self._current_message)
++                             int(Qt.AlignLeft) | int(Qt.AlignVCenter) | int(Qt.TextWordWrap),
+                              self._current_message)
  
          painter.restore()
-         super().drawContents(painter)
-diff --git a/cura/UI/ObjectsModel.py b/cura/UI/ObjectsModel.py
-index 02d409627..9f9049fe6 100644
---- a/cura/UI/ObjectsModel.py
-+++ b/cura/UI/ObjectsModel.py
+diff -upNr Cura.orig/cura/UI/ObjectsModel.py Cura.patched/cura/UI/ObjectsModel.py
+--- Cura.orig/cura/UI/ObjectsModel.py	2021-05-15 16:45:25.021490882 +0200
++++ Cura.patched/cura/UI/ObjectsModel.py	2021-05-15 16:46:00.297584738 +0200
 @@ -69,7 +69,7 @@ class ObjectsModel(ListModel):
          self._group_name_template = catalog.i18nc("@label", "Group #{group_nr}")
          self._group_name_prefix = self._group_name_template.split("#")[0]
@@ -68,10 +62,9 @@ index 02d409627..9f9049fe6 100644
  
      def setActiveBuildPlate(self, nr: int) -> None:
          if self._build_plate_number != nr:
-diff --git a/plugins/FirmwareUpdateChecker/FirmwareUpdateChecker.py b/plugins/FirmwareUpdateChecker/FirmwareUpdateChecker.py
-index 8d0670c84..bd1ddc888 100644
---- a/plugins/FirmwareUpdateChecker/FirmwareUpdateChecker.py
-+++ b/plugins/FirmwareUpdateChecker/FirmwareUpdateChecker.py
+diff -upNr Cura.orig/plugins/FirmwareUpdateChecker/FirmwareUpdateChecker.py Cura.patched/plugins/FirmwareUpdateChecker/FirmwareUpdateChecker.py
+--- Cura.orig/plugins/FirmwareUpdateChecker/FirmwareUpdateChecker.py	2021-05-15 16:45:16.485468413 +0200
++++ Cura.patched/plugins/FirmwareUpdateChecker/FirmwareUpdateChecker.py	2021-05-15 16:46:00.297584738 +0200
 @@ -30,7 +30,7 @@ class FirmwareUpdateChecker(Extension):
  
          # Listen to a Signal that indicates a change in the list of printers, just if the user has enabled the
@@ -81,10 +74,9 @@ index 8d0670c84..bd1ddc888 100644
          if Application.getInstance().getPreferences().getValue("info/automatic_update_check"):
              ContainerRegistry.getInstance().containerAdded.connect(self._onContainerAdded)
  
-diff --git a/plugins/PostProcessingPlugin/Script.py b/plugins/PostProcessingPlugin/Script.py
-index 1cc9b59c9..ac459ea33 100644
---- a/plugins/PostProcessingPlugin/Script.py
-+++ b/plugins/PostProcessingPlugin/Script.py
+diff -upNr Cura.orig/plugins/PostProcessingPlugin/Script.py Cura.patched/plugins/PostProcessingPlugin/Script.py
+--- Cura.orig/plugins/PostProcessingPlugin/Script.py	2021-05-15 16:45:16.489468423 +0200
++++ Cura.patched/plugins/PostProcessingPlugin/Script.py	2021-05-15 16:46:00.297584738 +0200
 @@ -122,7 +122,7 @@ class Script:
          if not key in line or (';' in line and line.find(key) > line.find(';')):
              return default
@@ -94,10 +86,9 @@ index 1cc9b59c9..ac459ea33 100644
          if m is None:
              return default
          try:
-diff --git a/plugins/PostProcessingPlugin/scripts/ColorMix.py b/plugins/PostProcessingPlugin/scripts/ColorMix.py
-index dacb40e90..8a959d3cd 100644
---- a/plugins/PostProcessingPlugin/scripts/ColorMix.py
-+++ b/plugins/PostProcessingPlugin/scripts/ColorMix.py
+diff -upNr Cura.orig/plugins/PostProcessingPlugin/scripts/ColorMix.py Cura.patched/plugins/PostProcessingPlugin/scripts/ColorMix.py
+--- Cura.orig/plugins/PostProcessingPlugin/scripts/ColorMix.py	2021-05-15 16:45:16.489468423 +0200
++++ Cura.patched/plugins/PostProcessingPlugin/scripts/ColorMix.py	2021-05-15 16:46:00.297584738 +0200
 @@ -112,7 +112,7 @@ class ColorMix(Script):
              m = re.search("^[+-]?[0-9]*", subPart)
          else:
@@ -107,10 +98,9 @@ index dacb40e90..8a959d3cd 100644
          if m == None:
              return default
          try:
-diff --git a/plugins/RemovableDriveOutputDevice/RemovableDrivePlugin.py b/plugins/RemovableDriveOutputDevice/RemovableDrivePlugin.py
-index d59d1296e..139c475c4 100644
---- a/plugins/RemovableDriveOutputDevice/RemovableDrivePlugin.py
-+++ b/plugins/RemovableDriveOutputDevice/RemovableDrivePlugin.py
+diff -upNr Cura.orig/plugins/RemovableDriveOutputDevice/RemovableDrivePlugin.py Cura.patched/plugins/RemovableDriveOutputDevice/RemovableDrivePlugin.py
+--- Cura.orig/plugins/RemovableDriveOutputDevice/RemovableDrivePlugin.py	2021-05-15 16:45:16.489468423 +0200
++++ Cura.patched/plugins/RemovableDriveOutputDevice/RemovableDrivePlugin.py	2021-05-15 16:46:00.297584738 +0200
 @@ -1,9 +1,7 @@
  # Copyright (c) 2017 Ultimaker B.V.
  # Cura is released under the terms of the LGPLv3 or higher.
@@ -122,7 +112,7 @@ index d59d1296e..139c475c4 100644
  
  # Uranium/Messaging
  from UM.Logger import Logger
-@@ -20,19 +18,19 @@ class RemovableDrivePlugin(OutputDevicePlugin):
+@@ -20,19 +18,19 @@ class RemovableDrivePlugin(OutputDeviceP
      def __init__(self):
          super().__init__()
  
@@ -146,7 +136,7 @@ index d59d1296e..139c475c4 100644
  
          self._addRemoveDrives({})
  
-@@ -55,10 +53,9 @@ class RemovableDrivePlugin(OutputDevicePlugin):
+@@ -55,10 +53,9 @@ class RemovableDrivePlugin(OutputDeviceP
          raise NotImplementedError()
  
      def _updateThread(self):
@@ -158,10 +148,9 @@ index d59d1296e..139c475c4 100644
  
      def _addRemoveDrives(self, drives):
          # First, find and add all new or changed keys
-diff --git a/plugins/SliceInfoPlugin/SliceInfo.py b/plugins/SliceInfoPlugin/SliceInfo.py
-index 6eed649cc..a1d73a7c7 100755
---- a/plugins/SliceInfoPlugin/SliceInfo.py
-+++ b/plugins/SliceInfoPlugin/SliceInfo.py
+diff -upNr Cura.orig/plugins/SliceInfoPlugin/SliceInfo.py Cura.patched/plugins/SliceInfoPlugin/SliceInfo.py
+--- Cura.orig/plugins/SliceInfoPlugin/SliceInfo.py	2021-05-15 16:45:16.493468433 +0200
++++ Cura.patched/plugins/SliceInfoPlugin/SliceInfo.py	2021-05-15 16:46:00.297584738 +0200
 @@ -43,7 +43,7 @@ class SliceInfo(QObject, Extension):
          self._application = CuraApplication.getInstance()
  
@@ -171,34 +160,21 @@ index 6eed649cc..a1d73a7c7 100755
          self._application.getPreferences().addPreference("info/asked_send_slice_info", False)
  
          self._more_info_dialog = None
-diff --git a/plugins/USBPrinting/USBPrinterOutputDevice.py b/plugins/USBPrinting/USBPrinterOutputDevice.py
-index 30694b074..8f09f209f 100644
---- a/plugins/USBPrinting/USBPrinterOutputDevice.py
-+++ b/plugins/USBPrinting/USBPrinterOutputDevice.py
-@@ -272,8 +272,8 @@ class USBPrinterOutputDevice(PrinterOutputDevice):
-                     self.sendCommand("M105")
-                     self._last_temperature_request = time()
+diff -upNr Cura.orig/plugins/UM3NetworkPrinting/src/ExportFileJob.py Cura.patched/plugins/UM3NetworkPrinting/src/ExportFileJob.py
+--- Cura.orig/plugins/UM3NetworkPrinting/src/ExportFileJob.py	2021-05-15 16:45:16.501468454 +0200
++++ Cura.patched/plugins/UM3NetworkPrinting/src/ExportFileJob.py	2021-05-15 16:47:41.057860884 +0200
+@@ -28,7 +28,7 @@ class ExportFileJob(WriteFileJob):
  
--            if re.search(b"[B|T\d*]: ?\d+\.?\d*", line):  # Temperature message. 'T:' for extruder and 'B:' for bed
--                extruder_temperature_matches = re.findall(b"T(\d*): ?(\d+\.?\d*)\s*\/?(\d+\.?\d*)?", line)
-+            if re.search(r"[B|T\d*]: ?\d+\.?\d*", line):  # Temperature message. 'T:' for extruder and 'B:' for bed
-+                extruder_temperature_matches = re.findall(r"T(\d*): ?(\d+\.?\d*)\s*\/?(\d+\.?\d*)?", line)
-                 # Update all temperature values
-                 matched_extruder_nrs = []
-                 for match in extruder_temperature_matches:
-@@ -295,7 +295,7 @@ class USBPrinterOutputDevice(PrinterOutputDevice):
-                     if match[2]:
-                         extruder.updateTargetHotendTemperature(float(match[2]))
+         # Determine the filename.
+         job_name = CuraApplication.getInstance().getPrintInformation().jobName
+-        job_name = re.sub("[^\w\-. ()]", "-", job_name)
++        job_name = re.sub(r"[^\w\-. ()]", "-", job_name)
+         extension = self._mesh_format_handler.preferred_format.get("extension", "")
+         self.setFileName("{}.{}".format(job_name, extension))
  
--                bed_temperature_matches = re.findall(b"B: ?(\d+\.?\d*)\s*\/?(\d+\.?\d*)?", line)
-+                bed_temperature_matches = re.findall(r"B: ?(\d+\.?\d*)\s*\/?(\d+\.?\d*)?", line)
-                 if bed_temperature_matches:
-                     match = bed_temperature_matches[0]
-                     if match[0]:
-diff --git a/plugins/USBPrinting/USBPrinterOutputDeviceManager.py b/plugins/USBPrinting/USBPrinterOutputDeviceManager.py
-index 1e9b46cb1..6cadbec21 100644
---- a/plugins/USBPrinting/USBPrinterOutputDeviceManager.py
-+++ b/plugins/USBPrinting/USBPrinterOutputDeviceManager.py
+diff -upNr Cura.orig/plugins/USBPrinting/USBPrinterOutputDeviceManager.py Cura.patched/plugins/USBPrinting/USBPrinterOutputDeviceManager.py
+--- Cura.orig/plugins/USBPrinting/USBPrinterOutputDeviceManager.py	2021-05-15 16:45:16.501468454 +0200
++++ Cura.patched/plugins/USBPrinting/USBPrinterOutputDeviceManager.py	2021-05-15 16:46:00.297584738 +0200
 @@ -1,13 +1,11 @@
  # Copyright (c) 2020 Ultimaker B.V.
  # Cura is released under the terms of the LGPLv3 or higher.
@@ -214,7 +190,7 @@ index 1e9b46cb1..6cadbec21 100644
  
  from UM.Signal import Signal, signalemitter
  from UM.OutputDevice.OutputDevicePlugin import OutputDevicePlugin
-@@ -38,8 +36,9 @@ class USBPrinterOutputDeviceManager(QObject, OutputDevicePlugin):
+@@ -38,8 +36,9 @@ class USBPrinterOutputDeviceManager(QObj
          self._serial_port_list = []
          self._usb_output_devices = {}
          self._usb_output_devices_model = None
@@ -226,7 +202,7 @@ index 1e9b46cb1..6cadbec21 100644
  
          self._check_updates = True
  
-@@ -57,10 +56,11 @@ class USBPrinterOutputDeviceManager(QObject, OutputDevicePlugin):
+@@ -57,10 +56,11 @@ class USBPrinterOutputDeviceManager(QObj
  
      def start(self):
          self._check_updates = True
@@ -239,7 +215,7 @@ index 1e9b46cb1..6cadbec21 100644
  
      def _onConnectionStateChanged(self, serial_port):
          if serial_port not in self._usb_output_devices:
-@@ -73,18 +73,14 @@ class USBPrinterOutputDeviceManager(QObject, OutputDevicePlugin):
+@@ -73,18 +73,14 @@ class USBPrinterOutputDeviceManager(QObj
              self.getOutputDeviceManager().removeOutputDevice(serial_port)
  
      def _updateThread(self):
@@ -260,3 +236,26 @@ index 1e9b46cb1..6cadbec21 100644
  
      def _addRemovePorts(self, serial_ports):
          """Helper to identify serial ports (and scan for them)"""
+diff -upNr Cura.orig/plugins/USBPrinting/USBPrinterOutputDevice.py Cura.patched/plugins/USBPrinting/USBPrinterOutputDevice.py
+--- Cura.orig/plugins/USBPrinting/USBPrinterOutputDevice.py	2021-05-15 16:45:16.501468454 +0200
++++ Cura.patched/plugins/USBPrinting/USBPrinterOutputDevice.py	2021-05-15 16:46:00.297584738 +0200
+@@ -274,8 +274,8 @@ class USBPrinterOutputDevice(PrinterOutp
+                     self.sendCommand("M105")
+                     self._last_temperature_request = time()
+ 
+-            if re.search(b"[B|T\d*]: ?\d+\.?\d*", line):  # Temperature message. 'T:' for extruder and 'B:' for bed
+-                extruder_temperature_matches = re.findall(b"T(\d*): ?(\d+\.?\d*)\s*\/?(\d+\.?\d*)?", line)
++            if re.search(r"[B|T\d*]: ?\d+\.?\d*", line):  # Temperature message. 'T:' for extruder and 'B:' for bed
++                extruder_temperature_matches = re.findall(r"T(\d*): ?(\d+\.?\d*)\s*\/?(\d+\.?\d*)?", line)
+                 # Update all temperature values
+                 matched_extruder_nrs = []
+                 for match in extruder_temperature_matches:
+@@ -297,7 +297,7 @@ class USBPrinterOutputDevice(PrinterOutp
+                     if match[2]:
+                         extruder.updateTargetHotendTemperature(float(match[2]))
+ 
+-                bed_temperature_matches = re.findall(b"B: ?(\d+\.?\d*)\s*\/?(\d+\.?\d*)?", line)
++                bed_temperature_matches = re.findall(r"B: ?(\d+\.?\d*)\s*\/?(\d+\.?\d*)?", line)
+                 if bed_temperature_matches:
+                     match = bed_temperature_matches[0]
+                     if match[0]:

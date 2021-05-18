@@ -1,8 +1,7 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c68058e7..c7e5f734 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -50,8 +50,9 @@ if(EXISTS /etc/debian_version)
+diff -upNr Uranium.orig/CMakeLists.txt Uranium.patched/CMakeLists.txt
+--- Uranium.orig/CMakeLists.txt	2021-05-15 14:13:47.697029258 +0200
++++ Uranium.patched/CMakeLists.txt	2021-05-15 14:49:32.983844134 +0200
+@@ -53,8 +53,9 @@ if(EXISTS /etc/debian_version)
  else()
      install(DIRECTORY UM DESTINATION lib${LIB_SUFFIX}/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages)
  endif()
@@ -14,11 +13,53 @@ index c68058e7..c7e5f734 100644
  install(DIRECTORY resources DESTINATION ${CMAKE_INSTALL_DATADIR}/uranium)
  
  # Detect plugins to install
-diff --git a/UM/Settings/InstanceContainer.py b/UM/Settings/InstanceContainer.py
-index 0f3a163b..5feed4e8 100644
---- a/UM/Settings/InstanceContainer.py
-+++ b/UM/Settings/InstanceContainer.py
-@@ -50,9 +50,9 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
+diff -upNr Uranium.orig/plugins/ConsoleLogger/ConsoleLogger.py Uranium.patched/plugins/ConsoleLogger/ConsoleLogger.py
+--- Uranium.orig/plugins/ConsoleLogger/ConsoleLogger.py	2021-05-15 14:13:47.709029268 +0200
++++ Uranium.patched/plugins/ConsoleLogger/ConsoleLogger.py	2021-05-15 14:49:32.983844134 +0200
+@@ -25,7 +25,7 @@ class ConsoleLogger(LogOutput):
+     def __init__(self) -> None:
+         super().__init__()
+         self._logger = logging.getLogger(self._name) # Create python logger
+-        self._logger.setLevel(logging.DEBUG)
++        self._logger.setLevel(logging.ERROR)
+         stream_handler = logging.StreamHandler() # Log to stream
+         stream_handler.setFormatter(logging_formatter)
+         self._logger.addHandler(stream_handler)
+diff -upNr Uranium.orig/UM/Application.py Uranium.patched/UM/Application.py
+--- Uranium.orig/UM/Application.py	2021-05-15 14:13:47.697029258 +0200
++++ Uranium.patched/UM/Application.py	2021-05-15 18:26:40.729004415 +0200
+@@ -204,15 +204,8 @@ class Application:
+ 
+         self._plugin_registry = PluginRegistry(self)
+ 
+-        self._plugin_registry.addPluginLocation(os.path.join(app_root, "share", "uranium", "plugins"))
+-        self._plugin_registry.addPluginLocation(os.path.join(app_root, "share", "cura", "plugins"))
+-
+         self._plugin_registry.addPluginLocation(os.path.join(self._app_install_dir, "lib", "uranium"))
+-        self._plugin_registry.addPluginLocation(os.path.join(self._app_install_dir, "lib64", "uranium"))
+-        self._plugin_registry.addPluginLocation(os.path.join(self._app_install_dir, "lib32", "uranium"))
+         self._plugin_registry.addPluginLocation(os.path.join(os.path.dirname(sys.executable), "plugins"))
+-        self._plugin_registry.addPluginLocation(os.path.join(self._app_install_dir, "Resources", "uranium", "plugins"))
+-        self._plugin_registry.addPluginLocation(os.path.join(self._app_install_dir, "Resources", self._app_name, "plugins"))
+         # Locally installed plugins
+         local_path = os.path.join(Resources.getStoragePath(Resources.Resources), "plugins")
+         # Ensure the local plugins directory exists
+diff -upNr Uranium.orig/UM/PluginRegistry.py Uranium.patched/UM/PluginRegistry.py
+--- Uranium.orig/UM/PluginRegistry.py	2021-05-15 14:13:47.701029262 +0200
++++ Uranium.patched/UM/PluginRegistry.py	2021-05-15 18:28:19.557155784 +0200
+@@ -202,7 +202,7 @@ class PluginRegistry(QObject):
+     #   Add a plugin location to the list of locations to search:
+     def addPluginLocation(self, location: str) -> None:
+         if not os.path.isdir(location):
+-            Logger.warning("Plugin location {0} must be a folder.".format(location))
++            # Logger.warning("Plugin location {0} must be a folder.".format(location))
+             return
+ 
+         self._plugin_locations.append(location)
+diff -upNr Uranium.orig/UM/Settings/InstanceContainer.py Uranium.patched/UM/Settings/InstanceContainer.py
+--- Uranium.orig/UM/Settings/InstanceContainer.py	2021-05-15 14:13:47.705029264 +0200
++++ Uranium.patched/UM/Settings/InstanceContainer.py	2021-05-15 14:49:32.983844134 +0200
+@@ -50,9 +50,9 @@ class InstanceContainer(QObject, Contain
      """A container for SettingInstance objects."""
  
      Version = 4
@@ -31,25 +72,9 @@ index 0f3a163b..5feed4e8 100644
  
      def __init__(self, container_id: str, parent: QObject = None, *args: Any, **kwargs: Any) -> None:
          """Constructor
-diff --git a/UM/VersionUpgrade.py b/UM/VersionUpgrade.py
-index 2b561ce7..5d92f871 100644
---- a/UM/VersionUpgrade.py
-+++ b/UM/VersionUpgrade.py
-@@ -19,8 +19,8 @@ class VersionUpgrade(PluginObject):
-         """Initialises a version upgrade plugin instance."""
- 
-         super().__init__()
--        self._version_regex = re.compile("\nversion ?= ?(\d+)")
--        self._setting_version_regex = re.compile("\nsetting_version ?= ?(\d+)")
-+        self._version_regex = re.compile("\nversion ?= ?(\\d+)")
-+        self._setting_version_regex = re.compile("\nsetting_version ?= ?(\\d+)")
- 
-     def getCfgVersion(self, serialised: str) -> int:
-         """
-diff --git a/UM/VersionUpgradeManager.py b/UM/VersionUpgradeManager.py
-index bcaa9c2d..6b06865c 100644
---- a/UM/VersionUpgradeManager.py
-+++ b/UM/VersionUpgradeManager.py
+diff -upNr Uranium.orig/UM/VersionUpgradeManager.py Uranium.patched/UM/VersionUpgradeManager.py
+--- Uranium.orig/UM/VersionUpgradeManager.py	2021-05-15 14:13:47.709029268 +0200
++++ Uranium.patched/UM/VersionUpgradeManager.py	2021-05-15 14:49:32.983844134 +0200
 @@ -95,21 +95,21 @@ class VersionUpgradeManager:
  
          #Regular expressions of the files that should not be checked, such as log files.
@@ -87,16 +112,17 @@ index bcaa9c2d..6b06865c 100644
          ]  # type: List[str]
  
      def registerIgnoredFile(self, file_name: str) -> None:
-diff --git a/plugins/ConsoleLogger/ConsoleLogger.py b/plugins/ConsoleLogger/ConsoleLogger.py
-index 871c0523..d93a8dc9 100644
---- a/plugins/ConsoleLogger/ConsoleLogger.py
-+++ b/plugins/ConsoleLogger/ConsoleLogger.py
-@@ -25,7 +25,7 @@ class ConsoleLogger(LogOutput):
-     def __init__(self) -> None:
+diff -upNr Uranium.orig/UM/VersionUpgrade.py Uranium.patched/UM/VersionUpgrade.py
+--- Uranium.orig/UM/VersionUpgrade.py	2021-05-15 14:13:47.709029268 +0200
++++ Uranium.patched/UM/VersionUpgrade.py	2021-05-15 14:49:32.983844134 +0200
+@@ -19,8 +19,8 @@ class VersionUpgrade(PluginObject):
+         """Initialises a version upgrade plugin instance."""
+ 
          super().__init__()
-         self._logger = logging.getLogger(self._name) # Create python logger
--        self._logger.setLevel(logging.DEBUG)
-+        self._logger.setLevel(logging.ERROR)
-         stream_handler = logging.StreamHandler() # Log to stream
-         stream_handler.setFormatter(logging_formatter)
-         self._logger.addHandler(stream_handler)
+-        self._version_regex = re.compile("\nversion ?= ?(\d+)")
+-        self._setting_version_regex = re.compile("\nsetting_version ?= ?(\d+)")
++        self._version_regex = re.compile("\nversion ?= ?(\\d+)")
++        self._setting_version_regex = re.compile("\nsetting_version ?= ?(\\d+)")
+ 
+     def getCfgVersion(self, serialised: str) -> int:
+         """

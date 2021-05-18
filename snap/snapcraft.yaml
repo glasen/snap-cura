@@ -1,5 +1,5 @@
 name: cura-slicer
-version: '4.8.0'
+version: '4.9.1'
 base: core20
 summary: Ultimaker Cura
 description: |
@@ -27,7 +27,10 @@ icon: snap/gui/cura-icon.png
 
 
 plugs:
-  gsettings:
+  gnome-3-38-2004:
+    default-provider: gnome-3-38-2004
+    interface: content
+    target: $SNAP/gnome-platform
   gtk-3-themes:
     interface: content
     target: $SNAP/data-dir/themes
@@ -64,6 +67,7 @@ apps:
       QT_QPA_PLATFORMTHEME: gtk3
     plugs:
       - desktop
+      - desktop-legacy
       - unity7
       - wayland
       - mount-observe
@@ -119,6 +123,18 @@ parts:
     prime: [-*]
 
 
+  qt5:
+    plugin: nil
+    prime: [-*]
+    override-build: |
+      echo "deb http://archive.neon.kde.org/user focal main" | tee /etc/apt/sources.list.d/kde-neon.list
+      wget -O - https://archive.neon.kde.org/public.key | apt-key add - 
+      apt install -yy python3-pyqt5.qtopengl python3-pyqt5.qtquick python3-pyqt5.qtsvg \
+      qml-module-qtqml-models2 qml-module-qt-labs-folderlistmodel qml-module-qt-labs-settings \
+      qml-module-qtquick-controls qml-module-qtquick-controls2 qtwayland5 qmlscene
+    build-packages:
+      - wget
+
   desktop-qt5:
     source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
     source-subdir: qt
@@ -144,6 +160,8 @@ parts:
       - xdg-user-dirs
       - fcitx-frontend-qt5
       - qt5-gtk-platformtheme
+    after:
+      - qt5
 
 
   libarcus:
@@ -156,7 +174,7 @@ parts:
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
     source-type: git
     source: https://github.com/Ultimaker/libArcus.git
-    source-branch: "4.8"
+    source-branch: "4.9.1"
     override-pull: |
       snapcraftctl pull
       patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/Arcus/01-remove-rpath.patch"
@@ -180,7 +198,7 @@ parts:
       - -DCMAKE_INSTALL_PREFIX=/usr/
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
     source: https://github.com/Ultimaker/libSavitar.git
-    source-branch: "4.8"
+    source-branch: "4.9.1"
     build-packages:
       - libpugixml-dev
     stage-packages:
@@ -207,7 +225,7 @@ parts:
       - -DCMAKE_INSTALL_PREFIX=/usr/
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
     source: https://github.com/Ultimaker/libCharon.git
-    source-branch: "4.8"
+    source-branch: "4.9.1"
     stage-packages:
       - python3-urllib3
       - python3-certifi
@@ -218,13 +236,13 @@ parts:
   trimesh:
     plugin: python
     source-type: tar
-    source: https://github.com/mikedh/trimesh/archive/3.8.12.tar.gz
+    source: https://github.com/mikedh/trimesh/archive/3.9.18.tar.gz
     after:
       - libcharon
     override-build: |
       python3 setup.py --no-user-cfg install --prefix="${SNAPCRAFT_PART_INSTALL}/usr"
       mkdir -p ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
-      mv ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3.8/site-packages/trimesh-3.8.12-py3.8.egg/trimesh ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
+      mv ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3.8/site-packages/trimesh-3.9.18-py3.8.egg/trimesh ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
       rm -rf ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3.8
     stage:
       -  -usr/bin/easy_install
@@ -236,13 +254,13 @@ parts:
   sentry-sdk:
     plugin: python
     source-type: tar
-    source: https://github.com/getsentry/sentry-python/releases/download/0.19.2/sentry-sdk-0.19.2.tar.gz
+    source: https://github.com/getsentry/sentry-python/releases/download/1.0.0/sentry-sdk-1.0.0.tar.gz
     after:
       - trimesh
     override-build: |
       python3 setup.py --no-user-cfg install --prefix="${SNAPCRAFT_PART_INSTALL}/usr"
       mkdir -p ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
-      mv ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3.8/site-packages/sentry_sdk-0.19.2-py3.8.egg/sentry_sdk ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
+      mv ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3.8/site-packages/sentry_sdk-1.0.0-py3.8.egg/sentry_sdk ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
       rm -rf ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3.8
     stage:
       -  -usr/bin/easy_install
@@ -265,7 +283,7 @@ parts:
 
   pynest2d:
     plugin: cmake
-    source: https://github.com/Ultimaker/pynest2d/archive/4.8.0.tar.gz
+    source: https://github.com/Ultimaker/pynest2d/archive/4.9.1.tar.gz
     source-type: tar
     cmake-parameters: 
       - -DCMAKE_INSTALL_PREFIX=/usr/
@@ -287,7 +305,7 @@ parts:
       - -Wno-dev
       - -DPolyclipping_INCLUDE_DIRS=/usr/include/polyclipping
     source: https://github.com/Ultimaker/CuraEngine.git
-    source-branch: "4.8"
+    source-branch: "4.9.1"
     build-packages:
       - rapidjson-dev
     stage-packages:
@@ -307,7 +325,7 @@ parts:
       - -DCMAKE_INSTALL_PREFIX=/usr/
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
     source: https://github.com/Ultimaker/fdm_materials.git
-    source-branch: "4.8"
+    source-branch: "4.9.1"
     after: 
       - cura-engine
 
@@ -323,7 +341,7 @@ parts:
       - -DCURA_BINARY_DATA_DIRECTORY=/usr/share/uranium
       - -DUM_NO_INSTALL_PLUGINS=UpdateChecker
     source: https://github.com/Ultimaker/Uranium.git
-    source-branch: "4.8"
+    source-branch: "4.9.1"
     override-pull: |
       snapcraftctl pull
       patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/uranium/uranium.patch"
@@ -354,10 +372,10 @@ parts:
       - -DCMAKE_INSTALL_PREFIX=/usr/
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
       - -DURANIUM_DIR=${SNAPCRAFT_STAGE}/usr/share/uranium
-      - -DCURA_VERSION=4.8.0
+      - -DCURA_VERSION=4.9.1
       - -DCURA_BUILDTYPE=SNAP
     source: https://github.com/Ultimaker/Cura.git
-    source-branch: "4.8"
+    source-branch: "4.9.1"
     stage-packages:
       - fonts-open-sans
       - python3-cryptography
@@ -365,6 +383,7 @@ parts:
       - python3-requests
       - python3-shapely
       - python3-zeroconf
+      - python3-keyring
       - python3-distutils
       - python3-pyqt5.qtopengl
       - python3-pyqt5.qtquick
