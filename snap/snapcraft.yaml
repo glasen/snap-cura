@@ -27,7 +27,10 @@ icon: snap/gui/cura-icon.png
 
 
 plugs:
-  gsettings:
+  gnome-3-38-2004:
+    default-provider: gnome-3-38-2004
+    interface: content
+    target: $SNAP/gnome-platform
   gtk-3-themes:
     interface: content
     target: $SNAP/data-dir/themes
@@ -53,15 +56,14 @@ apps:
     
   cura:
     adapter: full
+    extensions: [gnome-3-38]
     command: usr/bin/cura
     command-chain:
       - bin/desktop-launch
-      - bin/gtk3-env-launch
     environment:
       PYTHONPATH: $SNAP/usr/lib/python3/dist-packages:$SNAP/usr/lib/python3.8:$PYTHONPATH
       LD_LIBRARY_PATH: "$LD_LIBRARY_PATH:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/blas:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/lapack"
       DISABLE_WAYLAND: 1
-      QT_QPA_PLATFORMTHEME: gtk3
     plugs:
       - desktop
       - unity7
@@ -73,7 +75,7 @@ apps:
       - home
       - opengl
       - removable-media
-    
+
 
 build-packages:
   - wget
@@ -104,15 +106,6 @@ build-packages:
   - libnlopt-cxx-dev
 
 parts:
-  launchers: # custom launcher to set QT_QPA_PLATFORMTHEME=gtk3 correctly
-    source: local/launchers
-    plugin: dump
-    organize:
-      '*': bin/
-    stage:
-      - -bin/README.*
-
-
   patches:
     plugin: dump
     source: patches
