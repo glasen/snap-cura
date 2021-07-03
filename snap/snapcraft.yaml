@@ -181,6 +181,7 @@ parts:
       - libprotobuf17
       - libpython3.8
       - libpolyclipping22
+      - python3-sip
 
 
   libsavitar:
