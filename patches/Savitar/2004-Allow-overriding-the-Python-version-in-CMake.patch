@@ -1,22 +1,6 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f22d42e..bb7aac4 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -22,8 +22,8 @@ if(BUILD_PYTHON)
- 
-     # FIXME: Use FindPython3 to find Python, new in CMake 3.12.
-     # However currently on our CI server it finds the wrong Python version and then doesn't find the headers.
--    find_package(PythonInterp 3.4 REQUIRED)
--    find_package(PythonLibs 3.4 REQUIRED)
-+    find_package(PythonInterp 3.8 REQUIRED)
-+    find_package(PythonLibs 3.8 REQUIRED)
- 
-     find_package(SIP REQUIRED)
-     if(NOT DEFINED LIB_SUFFIX)
-diff --git a/cmake/FindSIP.cmake b/cmake/FindSIP.cmake
-index 3774b12..e2b4bf8 100644
---- a/cmake/FindSIP.cmake
-+++ b/cmake/FindSIP.cmake
+diff -upNr libSavitar-4.10.0.orig/cmake/FindSIP.cmake libSavitar-4.10.0.patched/cmake/FindSIP.cmake
+--- libSavitar-4.10.0.orig/cmake/FindSIP.cmake	2021-05-10 13:47:11.000000000 +0200
++++ libSavitar-4.10.0.patched/cmake/FindSIP.cmake	2021-07-03 17:30:52.729324358 +0200
 @@ -26,8 +26,8 @@ endif()
  
  # FIXME: Use the new FindPython3 module rather than these. New in CMake 3.12.
@@ -28,3 +12,22 @@ index 3774b12..e2b4bf8 100644
  
  # Define variables that are available in FindPython3, so there's no need to branch off in the later part.
  set(Python3_EXECUTABLE ${PYTHON_EXECUTABLE})
+diff -upNr libSavitar-4.10.0.orig/CMakeLists.txt libSavitar-4.10.0.patched/CMakeLists.txt
+--- libSavitar-4.10.0.orig/CMakeLists.txt	2021-05-10 13:47:11.000000000 +0200
++++ libSavitar-4.10.0.patched/CMakeLists.txt	2021-07-03 17:31:48.033534242 +0200
+@@ -25,12 +25,12 @@ if(BUILD_PYTHON)
+     if(${CMAKE_VERSION} VERSION_LESS 3.12)
+         # FIXME: Use FindPython3 to find Python, new in CMake 3.12.
+         # However currently on our CI server it finds the wrong Python version and then doesn't find the headers.
+-        find_package(PythonInterp 3.4 REQUIRED)
+-        find_package(PythonLibs 3.4 REQUIRED)
++        find_package(PythonInterp 3.8 REQUIRED)
++        find_package(PythonLibs 3.8 REQUIRED)
+ 
+     else()
+         # Use FindPython3 for CMake >=3.12
+-        find_package(Python3 3.4 REQUIRED COMPONENTS Interpreter Development)
++        find_package(Python3 3.8 REQUIRED COMPONENTS Interpreter Development)
+     endif()
+ 
+     find_package(SIP REQUIRED)

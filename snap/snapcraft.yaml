@@ -1,5 +1,5 @@
 name: cura-slicer
-version: '4.9.1'
+version: '4.10.0'
 base: core20
 summary: Ultimaker Cura
 description: |
@@ -166,7 +166,7 @@ parts:
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
     source-type: git
     source: https://github.com/Ultimaker/libArcus.git
-    source-branch: "4.9.1"
+    source-branch: "4.10.0"
     override-pull: |
       snapcraftctl pull
       patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/Arcus/01-remove-rpath.patch"
@@ -190,7 +190,7 @@ parts:
       - -DCMAKE_INSTALL_PREFIX=/usr/
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
     source: https://github.com/Ultimaker/libSavitar.git
-    source-branch: "4.9.1"
+    source-branch: "4.10.0"
     build-packages:
       - libpugixml-dev
     stage-packages:
@@ -217,7 +217,7 @@ parts:
       - -DCMAKE_INSTALL_PREFIX=/usr/
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
     source: https://github.com/Ultimaker/libCharon.git
-    source-branch: "4.9.1"
+    source-branch: "4.10.0"
     stage-packages:
       - python3-urllib3
       - python3-certifi
@@ -275,7 +275,7 @@ parts:
 
   pynest2d:
     plugin: cmake
-    source: https://github.com/Ultimaker/pynest2d/archive/4.9.1.tar.gz
+    source: https://github.com/Ultimaker/pynest2d/archive/4.10.0.tar.gz
     source-type: tar
     cmake-parameters: 
       - -DCMAKE_INSTALL_PREFIX=/usr/
@@ -297,7 +297,7 @@ parts:
       - -Wno-dev
       - -DPolyclipping_INCLUDE_DIRS=/usr/include/polyclipping
     source: https://github.com/Ultimaker/CuraEngine.git
-    source-branch: "4.9.1"
+    source-branch: "4.10.0"
     build-packages:
       - rapidjson-dev
     stage-packages:
@@ -317,7 +317,7 @@ parts:
       - -DCMAKE_INSTALL_PREFIX=/usr/
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
     source: https://github.com/Ultimaker/fdm_materials.git
-    source-branch: "4.9.1"
+    source-branch: "4.10.0"
     after: 
       - cura-engine
 
@@ -333,7 +333,7 @@ parts:
       - -DCURA_BINARY_DATA_DIRECTORY=/usr/share/uranium
       - -DUM_NO_INSTALL_PLUGINS=UpdateChecker
     source: https://github.com/Ultimaker/Uranium.git
-    source-branch: "4.9.1"
+    source-branch: "4.10.0"
     override-pull: |
       snapcraftctl pull
       patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/uranium/uranium.patch"
@@ -364,10 +364,10 @@ parts:
       - -DCMAKE_INSTALL_PREFIX=/usr/
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
       - -DURANIUM_DIR=${SNAPCRAFT_STAGE}/usr/share/uranium
-      - -DCURA_VERSION=4.9.1
+      - -DCURA_VERSION=4.10.0
       - -DCURA_BUILDTYPE=SNAP
     source: https://github.com/Ultimaker/Cura.git
-    source-branch: "4.9.1"
+    source-branch: "4.10.0"
     stage-packages:
       - fonts-open-sans
       - python3-cryptography
