@@ -376,6 +376,7 @@ parts:
       - python3-requests
       - python3-shapely
       - python3-zeroconf
+      - python3-networkx
       - python3-keyring
       - python3-distutils
       - python3-pyqt5.qtopengl
