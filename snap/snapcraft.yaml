@@ -1,5 +1,5 @@
 name: cura-slicer
-version: '4.12.0'
+version: '4.12.1'
 base: core20
 summary: Ultimaker Cura
 description: |
@@ -85,6 +85,7 @@ apps:
 
 build-packages:
   - wget
+  - cython3
   - qtbase5-dev
   - dpkg-dev
   - cmake
@@ -104,6 +105,7 @@ build-packages:
   - pylint
   - python3-pytest
   - python3-numpy
+  - python3-distutils
   - python3-setuptools
   - python3-wheel
   - libboost-dev
@@ -169,7 +171,7 @@ parts:
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
     source-type: git
     source: https://github.com/Ultimaker/libArcus.git
-    source-branch: "4.12.0"
+    source-branch: "4.12.1"
     override-pull: |
       snapcraftctl pull
       patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/Arcus/01-remove-rpath.patch"
@@ -194,7 +196,7 @@ parts:
       - -DCMAKE_INSTALL_PREFIX=/usr/
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
     source: https://github.com/Ultimaker/libSavitar.git
-    source-branch: "4.12.0"
+    source-branch: "4.12.1"
     build-packages:
       - libpugixml-dev
     stage-packages:
@@ -221,7 +223,7 @@ parts:
       - -DCMAKE_INSTALL_PREFIX=/usr/
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
     source: https://github.com/Ultimaker/libCharon.git
-    source-branch: "4.12.0"
+    source-branch: "4.12.1"
     stage-packages:
       - python3-urllib3
       - python3-certifi
@@ -229,12 +231,38 @@ parts:
       - libsavitar
 
 
+  shapely:
+    plugin: python
+    source-type: tar
+    source: https://github.com/Toblerity/Shapely/archive/refs/tags/1.8.0.tar.gz
+    build-packages:
+      - libgeos-dev
+    stage-packages:
+      - libgeos-3.8.0
+      - libgeos-c1v5
+    after:
+      - libcharon
+    override-pull: |
+      snapcraftctl pull
+      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/shapely/cython3.patch"
+    override-build: |
+      python3 setup.py --no-user-cfg install --prefix="${SNAPCRAFT_PART_INSTALL}/usr"
+      mkdir -p ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
+      mv ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3.8/site-packages/Shapely-1.8.0-py3.8-linux-x86_64.egg/shapely ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
+      rm -rf ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3.8
+    stage:
+      -  -usr/bin/easy_install
+      -  -usr/bin/f2py
+      -  -usr/bin/f2py3
+      -  -usr/bin/f2py3.8
+
+
   trimesh:
     plugin: python
     source-type: tar
     source: https://github.com/mikedh/trimesh/archive/3.9.35.tar.gz
     after:
-      - libcharon
+      - shapely
     override-build: |
       python3 setup.py --no-user-cfg install --prefix="${SNAPCRAFT_PART_INSTALL}/usr"
       mkdir -p ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
@@ -279,7 +307,7 @@ parts:
 
   pynest2d:
     plugin: cmake
-    source: https://github.com/Ultimaker/pynest2d/archive/4.12.0.tar.gz
+    source: https://github.com/Ultimaker/pynest2d/archive/4.12.1.tar.gz
     source-type: tar
     cmake-parameters: 
       - -DCMAKE_INSTALL_PREFIX=/usr/
@@ -301,7 +329,7 @@ parts:
       - -Wno-dev
       - -DPolyclipping_INCLUDE_DIRS=/usr/include/polyclipping
     source: https://github.com/Ultimaker/CuraEngine.git
-    source-branch: "4.12.0"
+    source-branch: "4.12.1"
     build-packages:
       - rapidjson-dev
     stage-packages:
@@ -321,7 +349,7 @@ parts:
       - -DCMAKE_INSTALL_PREFIX=/usr/
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
     source: https://github.com/Ultimaker/fdm_materials.git
-    source-branch: "4.11.0"
+    source-branch: "4.12.0"
     after: 
       - cura-engine
 
@@ -337,7 +365,7 @@ parts:
       - -DCURA_BINARY_DATA_DIRECTORY=/usr/share/uranium
       - -DUM_NO_INSTALL_PLUGINS=UpdateChecker
     source: https://github.com/Ultimaker/Uranium.git
-    source-branch: "4.12.0"
+    source-branch: "4.12.1"
     override-pull: |
       snapcraftctl pull
       patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/uranium/uranium.patch"
@@ -368,16 +396,15 @@ parts:
       - -DCMAKE_INSTALL_PREFIX=/usr/
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
       - -DURANIUM_DIR=${SNAPCRAFT_STAGE}/usr/share/uranium
-      - -DCURA_VERSION=4.12.0
+      - -DCURA_VERSION=4.12.1
       - -DCURA_BUILDTYPE=SNAP
     source: https://github.com/Ultimaker/Cura.git
-    source-branch: "4.12.0"
+    source-branch: "4.12.1"
     stage-packages:
       - fonts-open-sans
       - python3-cryptography
       - python3-colorlog
       - python3-requests
-      - python3-shapely
       - python3-zeroconf
       - python3-networkx
       - python3-keyring

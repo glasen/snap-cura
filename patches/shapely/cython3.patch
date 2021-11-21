@@ -1,0 +1,14 @@
+Description: Use cython3 for Python 3.
+Author: Bas Couwenberg <sebastic@debian.org>
+
+--- a/setup.py
++++ b/setup.py
+@@ -365,7 +365,7 @@ except ImportError:
+ try:
+     if force_cython:
+         log.info("Updating C extension with Cython.")
+-        subprocess.check_call(["cython", "shapely/speedups/_speedups.pyx"])
++        subprocess.check_call(["cython3", "shapely/speedups/_speedups.pyx"])
+ except (subprocess.CalledProcessError, OSError):
+     log.warning("Could not (re)create C extension with Cython.")
+     if force_cython:
