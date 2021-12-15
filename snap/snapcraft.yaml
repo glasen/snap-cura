@@ -125,7 +125,8 @@ parts:
     prime: [-*]
     override-build: |
       echo "deb http://archive.neon.kde.org/user focal main" | tee /etc/apt/sources.list.d/kde-neon.list
-      wget -O - https://archive.neon.kde.org/public.key | apt-key add - 
+      wget -O - https://archive.neon.kde.org/public.key | apt-key add -
+      apt update
       apt install -yy python3-pyqt5.qtopengl python3-pyqt5.qtquick python3-pyqt5.qtsvg \
       qml-module-qtqml-models2 qml-module-qt-labs-folderlistmodel qml-module-qt-labs-settings \
       qml-module-qtquick-controls qml-module-qtquick-controls2 qtwayland5 qmlscene python3-pyqt5.sip
