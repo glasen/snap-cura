@@ -65,53 +65,58 @@ apps:
     environment:
       PYTHONPATH: $SNAP/usr/lib/python3/dist-packages:$SNAP/usr/lib/python3.8:$PYTHONPATH
       LD_LIBRARY_PATH: "$LD_LIBRARY_PATH:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/blas:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/lapack"
-      QT_QPA_PLATFORMTHEME: gtk3
-      DISABLE_WAYLAND: 1
-      QT_AUTO_SCREEN_SCALE_FACTOR: 1
+      NO_AT_BRIDGE: 1
+      # QT_QPA_PLATFORMTHEME: gtk3
+      # DISABLE_WAYLAND: 1
+      # QT_AUTO_SCREEN_SCALE_FACTOR: 1
     plugs:
       - desktop
       - desktop-legacy
-      - unity7
-      - wayland
+      - home
       - mount-observe
       - network
       - network-bind
       - network-manager-observe
-      - home
       - opengl
-      - removable-media
       - raw-usb
+      - removable-media
+      - unity7
+      - wayland
     
 
 build-packages:
-  - wget
-  - cython3
-  - qtbase5-dev
-  - dpkg-dev
   - cmake
+  - cython3
+  - debhelper
+  - dh-python
+  - dpkg-dev
   - g++
-  - protobuf-compiler
+  - gettext
+  - git
+  - libboost-dev
+  - libnlopt-cxx-dev
+  - libnlopt-dev
+  - libpolyclipping-dev
   - libprotobuf-dev
   - libprotoc-dev
   - libpython3-dev
+  - pkg-config
+  - protobuf-compiler
+  - pylint
+  - python3-all-dev
+  - python3-distutils
+  - python3-numpy
+  - python3-pytest
+  - python3-setuptools
   - python3-sip
   - python3-sip-dev
-  - git
-  - gettext
-  - debhelper
-  - dh-python
-  - pkg-config
-  - python3-all-dev
-  - pylint
-  - python3-pytest
-  - python3-numpy
-  - python3-distutils
-  - python3-setuptools
   - python3-wheel
-  - libboost-dev
-  - libpolyclipping-dev
-  - libnlopt-dev
-  - libnlopt-cxx-dev
+  - qtbase5-dev
+  - wget
+
+layout:
+  /usr/share/libdrm:
+    bind: $SNAP/usr/share/libdrm
 
 parts:
   patches:
@@ -140,24 +145,24 @@ parts:
     make-parameters: ["FLAVOR=qt5"]
     build-packages:
       - build-essential
-      - qtbase5-dev
       - dpkg-dev
+      - qtbase5-dev
     stage-packages:
-      - libgtk2.0-0
-      - libxkbcommon0
-      - ttf-ubuntu-font-family
-      - dmz-cursor-theme
-      - light-themes
       - adwaita-icon-theme
-      - gnome-themes-standard
-      - shared-mime-info
-      - libqt5gui5
-      - libgdk-pixbuf2.0-0
-      - libqt5svg5
-      - locales-all
-      - xdg-user-dirs
+      - dmz-cursor-theme
       - fcitx-frontend-qt5
+      - gnome-themes-standard
+      - libgdk-pixbuf2.0-0
+      - libgtk2.0-0
+      - libqt5gui5
+      - libqt5svg5
+      - libxkbcommon0
+      - light-themes
+      - locales-all
       - qt5-gtk-platformtheme
+      - shared-mime-info
+      - ttf-ubuntu-font-family
+      - xdg-user-dirs
     after:
       - qt5
 
@@ -184,9 +189,9 @@ parts:
       mv ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3.8/site-packages/* ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
       rm -rf ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3.8
     stage-packages:
+      - libpolyclipping22
       - libprotobuf17
       - libpython3.8
-      - libpolyclipping22
       - python3-sip
 
 
@@ -226,8 +231,8 @@ parts:
     source: https://github.com/Ultimaker/libCharon.git
     source-branch: "4.12.1"
     stage-packages:
-      - python3-urllib3
       - python3-certifi
+      - python3-urllib3
     after:
       - libsavitar
 
@@ -372,18 +377,18 @@ parts:
       patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/uranium/uranium.patch"
     stage-packages:
       - python3-numpy
-      - python3-scipy
       - python3-pyqt5
-      - python3-serial
       - python3-pyqt5.qtopengl
       - python3-pyqt5.qtquick
       - python3-pyqt5.qtsvg
+      - python3-scipy
+      - python3-serial
       - qml-module-qtqml-models2
       - qml-module-qtquick-dialogs
     after:
+      - cura-engine
       - fdm-materials
       - patches
-      - cura-engine
     stage:
       -  -usr/bin/f2py
       -  -usr/bin/f2py3
@@ -403,16 +408,16 @@ parts:
     source-branch: "4.12.1"
     stage-packages:
       - fonts-open-sans
-      - python3-cryptography
       - python3-colorlog
-      - python3-requests
-      - python3-zeroconf
-      - python3-networkx
-      - python3-keyring
+      - python3-cryptography
       - python3-distutils
+      - python3-keyring
+      - python3-networkx
       - python3-pyqt5.qtopengl
       - python3-pyqt5.qtquick
       - python3-pyqt5.qtsvg
+      - python3-requests
+      - python3-zeroconf
       - qml-module-qt-labs-folderlistmodel
       - qml-module-qt-labs-settings
       - qml-module-qtquick-controls
