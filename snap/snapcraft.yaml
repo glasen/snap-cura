@@ -17,9 +17,10 @@ description: |
      sudo snap connect cura-slicer:removable-media
 
 
-architectures: 
-  - amd64
-  - arm64
+architectures:
+  - build-on: [amd64, arm64]
+    run-on: [amd64, arm64]
+
 
 grade: stable
 confinement: strict
