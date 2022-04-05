@@ -74,6 +74,7 @@ apps:
     plugs:
       - desktop
       - desktop-legacy
+      - hardware-observe
       - home
       - mount-observe
       - network
