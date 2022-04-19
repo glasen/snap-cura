@@ -300,8 +300,8 @@ parts:
       - -DLIBNEST2D_HEADER_ONLY=OFF
       - -DCMAKE_INSTALL_PREFIX=/usr/
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
-    source: https://github.com/Ultimaker/libnest2d.git
-    source-branch: "master"  
+    source: https://github.com/Ultimaker/libnest2d/archive/refs/tags/4.12.0.tar.gz
+    source-type: tar
     after:
       - sentry-sdk
 
