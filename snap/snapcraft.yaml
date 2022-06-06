@@ -1,5 +1,5 @@
 name: cura-slicer
-version: '4.13.1'
+version: '4.13.2'
 base: core20
 summary: Ultimaker Cura
 description: |
@@ -68,7 +68,6 @@ apps:
       PYTHONPATH: $SNAP/usr/lib/python3/dist-packages:$SNAP/usr/lib/python3.8:$PYTHONPATH
       LD_LIBRARY_PATH: "$LD_LIBRARY_PATH:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/blas:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/lapack"
       NO_AT_BRIDGE: 1
-      QT_QPA_PLATFORMTHEME: gtk3
       DISABLE_WAYLAND: 1
       QT_AUTO_SCREEN_SCALE_FACTOR: 1
     plugs:
@@ -172,7 +171,7 @@ parts:
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
     source-type: git
     source: https://github.com/Ultimaker/libArcus.git
-    source-branch: "4.13.1"
+    source-branch: "4.13.2"
     override-pull: |
       snapcraftctl pull
       patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/Arcus/01-remove-rpath.patch"
@@ -197,7 +196,7 @@ parts:
       - -DCMAKE_INSTALL_PREFIX=/usr/
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
     source: https://github.com/Ultimaker/libSavitar.git
-    source-branch: "4.13.1"
+    source-branch: "4.13.2"
     build-packages:
       - libpugixml-dev
     stage-packages:
@@ -224,7 +223,7 @@ parts:
       - -DCMAKE_INSTALL_PREFIX=/usr/
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
     source: https://github.com/Ultimaker/libCharon.git
-    source-branch: "4.13.0"
+    source-branch: "4.13.2"
     stage-packages:
       - python3-certifi
       - python3-urllib3
@@ -235,7 +234,7 @@ parts:
   shapely:
     plugin: python
     source-type: tar
-    source: https://github.com/Toblerity/Shapely/archive/refs/tags/1.8.0.tar.gz
+    source: https://github.com/Toblerity/Shapely/archive/refs/tags/1.8.2.tar.gz
     build-packages:
       - libgeos-dev
     stage-packages:
@@ -249,7 +248,7 @@ parts:
     override-build: |
       python3 setup.py --no-user-cfg install --prefix="${SNAPCRAFT_PART_INSTALL}/usr"
       mkdir -p ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
-      mv ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3.8/site-packages/Shapely-1.8.0-py3.8-linux-x86_64.egg/shapely ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
+      mv ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3.8/site-packages/Shapely-1.8.2-py3.8-linux-x86_64.egg/shapely ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
       rm -rf ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3.8
     stage:
       -  -usr/bin/easy_install
@@ -308,7 +307,7 @@ parts:
 
   pynest2d:
     plugin: cmake
-    source: https://github.com/Ultimaker/pynest2d/archive/4.13-beta.tar.gz
+    source: https://github.com/Ultimaker/pynest2d/archive/4.13.2.tar.gz
     source-type: tar
     cmake-parameters: 
       - -DCMAKE_INSTALL_PREFIX=/usr/
@@ -330,7 +329,7 @@ parts:
       - -Wno-dev
       - -DPolyclipping_INCLUDE_DIRS=/usr/include/polyclipping
     source: https://github.com/Ultimaker/CuraEngine.git
-    source-branch: "4.13.1"
+    source-branch: "4.13.2"
     build-packages:
       - rapidjson-dev
     stage-packages:
@@ -349,7 +348,7 @@ parts:
       - -DCMAKE_INSTALL_PREFIX=/usr/
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
     source: https://github.com/Ultimaker/fdm_materials.git
-    source-branch: "4.13.0"
+    source-branch: "4.13.2"
     after: 
       - cura-engine
 
@@ -365,7 +364,7 @@ parts:
       - -DCURA_BINARY_DATA_DIRECTORY=/usr/share/uranium
       - -DUM_NO_INSTALL_PLUGINS=UpdateChecker
     source: https://github.com/Ultimaker/Uranium.git
-    source-branch: "4.13.1"
+    source-branch: "4.13.2"
     override-pull: |
       snapcraftctl pull
       patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/uranium/uranium.patch"
@@ -396,12 +395,13 @@ parts:
       - -DCMAKE_INSTALL_PREFIX=/usr/
       - -DCMAKE_PREFIX_PATH="${SNAPCRAFT_STAGE}/usr"
       - -DURANIUM_DIR=${SNAPCRAFT_STAGE}/usr/share/uranium
-      - -DCURA_VERSION=4.13.1
+      - -DCURA_VERSION=4.13.2
       - -DCURA_BUILDTYPE=SNAP
     source: https://github.com/Ultimaker/Cura.git
-    source-branch: "4.13.1"
+    source-branch: "4.13.2"
     stage-packages:
       - fonts-open-sans
+      - fonts-noto
       - python3-colorlog
       - python3-cryptography
       - python3-distutils
