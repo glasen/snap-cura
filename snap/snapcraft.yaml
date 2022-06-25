@@ -128,21 +128,11 @@ package-repositories:
     url: http://archive.neon.kde.org/user
 
 parts:
-  patches:
-    plugin: dump
-    source: patches
-    prime: [-*]
-
-
   desktop-qt5:
     source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
     source-subdir: qt
     plugin: make
     make-parameters: ["FLAVOR=qt5"]
-    build-packages:
-      - build-essential
-      - dpkg-dev
-      - qtbase5-dev
     stage-packages:
       - adwaita-icon-theme
       - dmz-cursor-theme
@@ -160,7 +150,6 @@ parts:
       - ttf-ubuntu-font-family
       - xdg-user-dirs
 
-
   libarcus:
     plugin: cmake
     cmake-parameters:
@@ -174,9 +163,9 @@ parts:
     source-branch: "4.13.2"
     override-pull: |
       snapcraftctl pull
-      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/Arcus/01-remove-rpath.patch"
-      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/Arcus/02-add-python-version.patch"
-      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/Arcus/03-Allow-overriding-the-Python-version-in-CMake.patch"
+      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/local/patches/Arcus/01-remove-rpath.patch"
+      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/local/patches//Arcus/02-add-python-version.patch"
+      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/local/patches//Arcus/03-Allow-overriding-the-Python-version-in-CMake.patch"
     override-build: |
       snapcraftctl build
       mkdir -p ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
@@ -203,10 +192,10 @@ parts:
       - libpugixml1v5
     override-pull: |
       snapcraftctl pull
-      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/Savitar/2001-remove-rpath.patch"
-      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/Savitar/2002-system-pugixml.patch"
-      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/Savitar/2003-remove-cmake-python-install-hack.patch"
-      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/Savitar/2004-Allow-overriding-the-Python-version-in-CMake.patch"
+      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/local/patches//Savitar/2001-remove-rpath.patch"
+      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/local/patches//Savitar/2002-system-pugixml.patch"
+      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/local/patches//Savitar/2003-remove-cmake-python-install-hack.patch"
+      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/local/patches//Savitar/2004-Allow-overriding-the-Python-version-in-CMake.patch"
     override-build: |
       snapcraftctl build
       mkdir -p ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
@@ -244,7 +233,7 @@ parts:
       - libcharon
     override-pull: |
       snapcraftctl pull
-      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/shapely/cython3.patch"
+      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/local/patches//shapely/cython3.patch"
     override-build: |
       python3 setup.py --no-user-cfg install --prefix="${SNAPCRAFT_PART_INSTALL}/usr"
       mkdir -p ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
@@ -336,7 +325,7 @@ parts:
       - libgomp1
     override-pull: |
       snapcraftctl pull
-      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/cura-engine/2001-version-test.patch"
+      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/local/patches//cura-engine/2001-version-test.patch"
     after:
       - trimesh
     
@@ -367,7 +356,7 @@ parts:
     source-branch: "4.13.2"
     override-pull: |
       snapcraftctl pull
-      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/uranium/uranium.patch"
+      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/local/patches//uranium/uranium.patch"
     stage-packages:
       - python3-numpy
       - python3-pyqt5
@@ -381,7 +370,6 @@ parts:
     after:
       - cura-engine
       - fdm-materials
-      - patches
     stage:
       -  -usr/bin/f2py
       -  -usr/bin/f2py3
@@ -419,8 +407,7 @@ parts:
       - qtwayland5
     override-pull: |
       snapcraftctl pull
-      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/patches/cura/cura.patch"
+      patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/local/patches//cura/cura.patch"
     after:
       - desktop-qt5
       - uranium
-      - patches

@@ -1,0 +1,20 @@
+diff -upNr libArcus-5.0.0.orig/CMakeLists.txt libArcus-5.0.0.patched/CMakeLists.txt
+--- libArcus-5.0.0.orig/CMakeLists.txt	2022-06-10 18:33:40.794511705 +0200
++++ libArcus-5.0.0.patched/CMakeLists.txt	2022-06-10 18:34:17.038775416 +0200
+@@ -7,7 +7,7 @@ include(GenerateExportHeader)
+ 
+ option(BUILD_PYTHON "Build Python bindings for this library" ON)
+ 
+-find_package(Protobuf 3.17.1 REQUIRED)
++find_package(Protobuf 3.12.1 REQUIRED)
+ 
+ set(arcus_SRCS
+     src/Socket.cpp
+@@ -153,4 +153,5 @@ if(BUILD_PYTHON)
+     else()
+         install_sip_module(pyArcus)
+     endif ()
+-endif()
+\ Kein Zeilenumbruch am Dateiende.
++endif()
++
