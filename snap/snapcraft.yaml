@@ -3,6 +3,31 @@ version: '4.13.2'
 base: core20
 summary: Ultimaker Cura
 description: |
+  ** Important note **
+
+  This snap will not ship a version higher than 4.13.2 until further notice. However, there will still be security updates for the packages included in the snap.
+
+  If you want to use a version higher than 4.13.2, please use the official version in AppImage format:
+
+  https://github.com/Ultimaker/Cura/releases/
+
+Trusted by millions of users, Ultimaker Cura is the world’s most popular 3D printing software.
+Prepare prints with a few clicks, integrate with CAD software for an easier workflow, or dive into custom settings for in-depth control. 
+
+https://ultimaker.com/software/ultimaker-cura
+
+**Disclaimer:**
+
+This is not an official version of Cura! It is build from the release sources but depends an other runtime libraries than the official version (core20 runtime of Ubuntu).
+
+All product and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them.
+
+**Note:**
+
+To enable detecting USB-media please use the following commands:
+
+   sudo snap connect cura-slicer:mount-observe
+   sudo snap connect cura-slicer:removable-media
   Trusted by millions of users, Ultimaker Cura is the world’s most popular 3D printing software.
   Prepare prints with a few clicks, integrate with CAD software for an easier workflow, or dive into custom settings for in-depth control. 
 
