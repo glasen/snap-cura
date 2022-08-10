@@ -41,7 +41,6 @@ description: |
 
 architectures:
   - build-on: arm64
-  - build-on: armhf
   - build-on: amd64
 
 
@@ -260,7 +259,7 @@ parts:
     override-build: |
       python3 setup.py --no-user-cfg install --prefix="${SNAPCRAFT_PART_INSTALL}/usr"
       mkdir -p ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
-      mv ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3.8/site-packages/Shapely-1.8.2-py3.8-linux-x86_64.egg/shapely ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
+      mv ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3.8/site-packages/Shapely-1.8.2-py3.8-*.egg/shapely ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3/dist-packages
       rm -rf ${SNAPCRAFT_PART_INSTALL}/usr/lib/python3.8
     stage:
       -  -usr/bin/easy_install
