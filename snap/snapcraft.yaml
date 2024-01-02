@@ -380,6 +380,7 @@ parts:
       snapcraftctl pull
       patch -p1 < "${SNAPCRAFT_PROJECT_DIR}/local/patches//uranium/uranium.patch"
     stage-packages:
+      - libglu1-mesa
       - python3-numpy
       - python3-pyqt5
       - python3-pyqt5.qtopengl
